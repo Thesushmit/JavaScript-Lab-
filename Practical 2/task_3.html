@@ -1,11 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
-    ff
+    <h1>Task 1 <br>Dynamic Student Report Card Using Destructuring and
+        Template Literals</h1>
+    <script>
+        function marks(name, rollnumber, cn = 0, dbms = 0, os = 0, python = 0, cc = 0) {
+            const info_marks = [name, rollnumber, cn, dbms, os, python, cc];
+            const [nam, rollno, sub1, sub2, sub3, sub4, sub5] = info_marks;
+            var total_marks = sub1 + sub2 + sub3 + sub4 + sub5;
+            const percentage_marks = (total_marks / 500) * 100;
+            console.log(`Report card for ${name} Roll no ${rollno}\n--------------------------------\n`);
+            console.log(`Subjects : CN ${sub1}, DBMS ${sub2}, OS ${sub3},Python ${sub4}, CC ${sub5} `);
+            console.log(`Total Marks: ${total_marks}/500`);
+            console.log(`Percentage: ${percentage_marks}%`);
+        }
+        marks("sushmit", 11, 50, 78, 81, 33, 66);
+    </script>
 </body>
+
 </html>

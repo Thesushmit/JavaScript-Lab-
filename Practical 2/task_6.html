@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Task 4 Color Mixer using Destructuring and Spread/Rest
+        Operators</h1>
+    <script>
+        arr1 = ["red", "green"];
+        arr2 = ["blue", "Yellow"];
+        palatte = [...arr1, ...arr2];
+        console.log(palatte)
+        const [first, last] = palatte;
+        const palatte2 = [...palatte];
+        palatte2.pop();
+        palatte2.shift();
+        // console.log(palatte)
+        console.log(`Main Colors ${first} ${last}. Others in the palette ${palatte2}`);
+
+    </script>
+</body>
+
+</html>
