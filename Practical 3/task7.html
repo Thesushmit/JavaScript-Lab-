@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Task 7 ATM</h1>
+    <script>
+        let t_type = prompt("Enter W/D/B: ");
+        bal = 10000;
+        console.log(`Bal before operation ${bal}`);
+        switch (t_type){
+            case "W":
+                let money = prompt("Enter amount:");
+                bal = bal - money;
+                console.log(`The current bal : ${bal}`);
+                break;
+            case "D":
+                money = prompt("Enter amount:");
+                bal = bal + money;
+                console.log(`The current bal : ${bal}`);
+                break;
+            case "B":
+                console.log(`The current bal : ${bal}`);
+            default:
+                console.log("Invalid input");
+            }
+    </script>
+</body>
+</html>
