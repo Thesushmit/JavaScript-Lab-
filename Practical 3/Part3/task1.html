@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Grading System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    input[type="number"] {
+      width: 60px;
+    }
+    .result {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Student Grading System</h2>
+
+  <form id="marksForm">
+    <label for="studentCount">Enter number of students:</label>
+    <input type="number" id="studentCount" min="1" required>
+    <button type="button" onclick="generateInputs()">Generate Inputs</button>
+  </form>
+
+  <form id="gradesForm" onsubmit="calculateGrades(event)">
+    <div id="inputsContainer"></div>
+    <button type="submit" style="margin-top: 10px;">Submit Marks</button>
+  </form>
+
+  <div class="result" id="results"></div>
+
+  <script>
+    function generateInputs() {
+      const count = parseInt(document.getElementById('studentCount').value);
+      const container = document.getElementById('inputsContainer');
+      container.innerHTML = ''; // Clear previous inputs
+
+      for (let i = 1; i <= count; i++) {
+        const label = document.createElement('label');
+        label.textContent = `Marks for Student ${i}: `;
+
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.name = 'marks';
+        input.min = 0;
+        input.max = 100;
+        input.required = true;
+
+        container.appendChild(label);
+        container.appendChild(input);
+        container.appendChild(document.createElement('br'));
+      }
+    }
+
+    function calculateGrades(event) {
+      event.preventDefault(); // Prevent page reload
+
+      const inputs = document.getElementsByName('marks');
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '<h3>Results:</h3>';
+
+      for (let i = 0; i < inputs.length; i++) {
+        const mark = parseFloat(inputs[i].value);
+        let grade = '';
+
+        if (mark >= 90 && mark <= 100) {
+          grade = 'A';
+        } else if (mark >= 80) {
+          grade = 'B';
+        } else if (mark >= 70) {
+          grade = 'C';
+        } else if (mark >= 60) {
+          grade = 'D';
+        } else if (mark >= 0) {
+          grade = 'F';
+        } else {
+          grade = 'Invalid';
+        }
+
+        const resultLine = document.createElement('p');
+        resultLine.textContent = `Student ${i + 1}: ${mark}%  Grade ${grade}`;
+        resultsDiv.appendChild(resultLine);
+      }
+    }
+  </script>
+
+</body>
+</html>
