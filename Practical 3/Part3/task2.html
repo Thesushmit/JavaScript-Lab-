@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Feedback Form</title>
+</head>
+<body>
+
+  <h2>Feedback Form</h2>
+
+  <form onsubmit="return handleSubmit()">
+    <label>Name:</label><br>
+    <input type="text" id="name" required><br><br>
+
+    <label>Email:</label><br>
+    <input type="email" id="email" required><br><br>
+
+    <label>Rate your experience:</label><br>
+    <input type="radio" name="experience" value="Excellent" required> Excellent<br>
+    <input type="radio" name="experience" value="Good"> Good<br>
+    <input type="radio" name="experience" value="Average"> Average<br><br>
+
+    <label>Feedback:</label><br>
+    <textarea id="feedback" rows="4" cols="40" required></textarea><br><br>
+
+    <input type="submit" value="Submit">
+  </form>
+
+  <script>
+    function handleSubmit() {
+      var name = document.getElementById('name').value;
+      var email = document.getElementById('email').value;
+      var experience = document.querySelector('input[name="experience"]:checked').value;
+      var feedback = document.getElementById('feedback').value;
+
+      alert("Thank you!\n\nName: " + name + "\nEmail: " + email + "\nExperience: " + experience + "\nFeedback: " + feedback);
+      return false;
+    }
+  </script>
+
+</body>
+</html>
