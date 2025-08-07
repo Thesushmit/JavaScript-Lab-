@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // 1. Print only even numbers
+        const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        for (let i = 0; i < numbers.length; i++) {
+            if (numbers[i] % 2 === 0) {
+                console.log("Even:", numbers[i]);
+            }
+        }
+
+        // 2. Find longest string in array
+        const strings = ["apple", "banana", "cherry", "blueberry"];
+        let longest = "";
+        for (let i = 0; i < strings.length; i++) {
+            if (strings[i].length > longest.length) {
+                longest = strings[i];
+            }
+        }
+        console.log("Longest string:", longest);
+
+        // 3. Print all odd numbers from 1 to n
+        let n = 15;
+        let i = 1;
+        while (i <= n) {
+            if (i % 2 !== 0) {
+                console.log("Odd:", i);
+            }
+            i++;
+        }
+
+        // 4. Fibonacci numbers up to n
+        let limit = 50;
+        let a = 0, b = 1;
+        while (a <= limit) {
+            console.log("Fibonacci:", a);
+            let next = a + b;
+            a = b;
+            b = next;
+        }
+
+        // 5. Ask user repeatedly for a number until 0
+        let number;
+        do {
+            number = parseInt(prompt("Enter a number (0 to stop):"));
+        } while (number !== 0);
+        console.log("Stopped input loop");
+
+        // 6. Guessing game with hints
+        const target = Math.floor(Math.random() * 10) + 1;
+        let guess;
+        do {
+            guess = parseInt(prompt("Guess a number between 1 and 10:"));
+            if (guess > target) {
+                console.log("Too high!");
+            } else if (guess < target) {
+                console.log("Too low!");
+            } else {
+                console.log("Correct!");
+            }
+        } while (guess !== target);
+
+        // 7. Do-while loop until user enters "exit"
+        let input;
+        do {
+            input = prompt("Enter something (type 'exit' to quit):");
+        } while (input !== "exit");
+        console.log("Exited input loop");
+
+        // 8. Reverse an array using do-while
+        const array = [1, 2, 3, 4, 5];
+        const reversed = [];
+        i = array.length - 1;
+        do {
+            reversed.push(array[i]);
+            i--;
+        } while (i >= 0);
+        console.log("Reversed array:", reversed);
+
+        // 9. Multiplication table 1 to 10
+        for (let i = 1; i <= 10; i++) {
+            for (let j = 1; j <= 10; j++) {
+                console.log(`${i} x ${j} = ${i * j}`);
+            }
+            console.log("-------------");
+        }
+
+        // 10. Factorial calculator until "exit"
+        while (true) {
+            input = prompt("Enter a number to calculate factorial (type 'exit' to stop):");
+            if (input === "exit") break;
+            let num = parseInt(input);
+            let fact = 1;
+            for (let i = 2; i <= num; i++) {
+                fact *= i;
+            }
+            console.log(`Factorial of ${num} is ${fact}`);
+        }
+
+        // 11. Guessing game using do-while loop
+        const randomNumber = Math.floor(Math.random() * 10) + 1;
+        do {
+            guess = parseInt(prompt("Guess the number (1 to 10):"));
+            if (guess < randomNumber) {
+                console.log("Too low!");
+            } else if (guess > randomNumber) {
+                console.log("Too high!");
+            } else {
+                console.log("You guessed it!");
+            }
+        } while (guess !== randomNumber);
+
+    </script>
+</body>
+
+</html>
