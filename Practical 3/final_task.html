@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .main-cont-form {
+            display: flex;
+            justify-content: center;
+            flex-direction: row;
+        }
+
+        .team1,
+        .team2,
+        .team3 {
+            padding: 10vh;
+            border: 2px;
+            border-style: solid;
+            margin: 10vh;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 style="text-align: center; color: rgb(43, 25, 124); padding-top: 5vh;">Campus Club Performance Tracker</h1>
+    <div class="main-cont-form">
+        <div class="team1">
+            <h1>Team 1</h1>
+            <br>
+            <label for="">Team Name:</label><br>
+            <input type="text" style="padding: 0.5vh; border-radius: 5px;">
+            <br><br>
+            <label for="">Team ID:</label><br>
+            <input type="number" style="padding: 0.5vh; border-radius: 5px;">
+            <br><br>
+            <label for="team1-r1">
+                Round 1 Score:
+            </label>
+            <input type="range" id="team1-r1" min="0" max="100" value="50">
+            <br><br>
+            <label for="">Round 2 Score:</label>
+            <input type="number" style="padding: 0.5vh; border-radius: 5px;">
+        </div>
+        <div class="team2">
+            <h1>Team 2</h1><br>
+            <label for="">Team Name:</label><br>
+            <input type="text" style="padding: 0.5vh; border-radius: 5px;">
+            <br><br>
+            <label for="">Team ID:</label><br>
+            <input type="number" style="padding: 0.5vh; border-radius: 5px;">
+            <br><br>
+            <label for="team1-r1">
+                Round 1 Score:
+            </label>
+            <input type="range" id="team1-r1" min="0" max="100" value="50">
+            <br><br>
+            <label for="">Round 2 Score:</label>
+            <input type="number" style="padding: 0.5vh; border-radius: 5px;">
+        </div>
+        <div class="team3">
+            <h1>Team 3</h1><br>
+            <label for="">Team Name:</label><br>
+            <input type="text" style="padding: 0.5vh; border-radius: 5px;   ">
+            <br><br>
+            <label for="">Team ID:</label><br>
+            <input type="number" style="padding: 0.5vh; border-radius: 5px;">
+            <br><br>
+            <label for="team1-r1">
+                Round 1 Score:
+            </label>
+            <input type="range" id="team1-r1" min="0" max="100" value="50">
+            <br><br>
+            <label for="">Round 2 Score:</label>
+            <input type="number" style="padding: 0.5vh; border-radius: 5px;">
+            <div class="form-group">
+                <label for="team1-r3">Round 3 Category:</label>
+                <select id="team1-r3" required></select>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

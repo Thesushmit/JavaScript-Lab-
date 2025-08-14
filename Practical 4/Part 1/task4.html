@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<h1>Create a closure that stores a secret message and returns it only when a password matches.</h1>
+<script>
+function secretMessageClosure(secret, password) {
+    return function(pass) {
+        if (pass === password) {
+            return secret;
+        } else {
+            return "Incorrect password!";
+        }
+    }
+}
+
+
+const getSecret = secretMessageClosure("This is a secret message.", "1234");
+
+
+
+console.log(getSecret("1234")); 
+</script>
+</body>
+
+</html>
