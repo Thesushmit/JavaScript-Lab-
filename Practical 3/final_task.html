@@ -1,92 +1,380 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Campus Club Performance Tracker</title>
     <style>
-        * {
+        /* Basic CSS Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8; /* Kept a light gray background for contrast */
+            color: #000;
             margin: 0;
-            padding: 0;
+            padding: 20px;
         }
-
-        .main-cont-form {
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 20px;
+        }
+        h1 {
+            font-size: 28px;
+            color: #000;
+            margin: 0;
+        }
+        h2 {
+            font-size: 20px;
+            margin-top: 0;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+        .team-1 h2, .team-2 h2, .team-3 h2 { 
+            color: #000;
+        }
+        /* Re-added flex to make sections side-by-side */
+        .input-section, .output-section {
             display: flex;
-            justify-content: center;
-            flex-direction: row;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .input-card, .output-card {
+            flex: 1;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        input[type="range"] { width: 100%; }
+        .action-button-container { text-align: center; margin: 30px 0; }
+        
+        #calculate-btn {
+             padding: 5px 10px;
         }
 
-        .team1,
-        .team2,
-        .team3 {
-            padding: 10vh;
-            border: 2px;
-            border-style: solid;
-            margin: 10vh;
-            border-radius: 10px;
+        .output-card {
+            opacity: 0; /* Hidden for animation */
         }
+        
+        .winner-glow {
+            box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.4);
+            border-color: #000;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-card { animation: fadeInUp 0.6s ease-out forwards; }
     </style>
 </head>
-
 <body>
-    <h1 style="text-align: center; color: rgb(43, 25, 124); padding-top: 5vh;">Campus Club Performance Tracker</h1>
-    <div class="main-cont-form">
-        <div class="team1">
-            <h1>Team 1</h1>
-            <br>
-            <label for="">Team Name:</label><br>
-            <input type="text" style="padding: 0.5vh; border-radius: 5px;">
-            <br><br>
-            <label for="">Team ID:</label><br>
-            <input type="number" style="padding: 0.5vh; border-radius: 5px;">
-            <br><br>
-            <label for="team1-r1">
-                Round 1 Score:
-            </label>
-            <input type="range" id="team1-r1" min="0" max="100" value="50">
-            <br><br>
-            <label for="">Round 2 Score:</label>
-            <input type="number" style="padding: 0.5vh; border-radius: 5px;">
-        </div>
-        <div class="team2">
-            <h1>Team 2</h1><br>
-            <label for="">Team Name:</label><br>
-            <input type="text" style="padding: 0.5vh; border-radius: 5px;">
-            <br><br>
-            <label for="">Team ID:</label><br>
-            <input type="number" style="padding: 0.5vh; border-radius: 5px;">
-            <br><br>
-            <label for="team1-r1">
-                Round 1 Score:
-            </label>
-            <input type="range" id="team1-r1" min="0" max="100" value="50">
-            <br><br>
-            <label for="">Round 2 Score:</label>
-            <input type="number" style="padding: 0.5vh; border-radius: 5px;">
-        </div>
-        <div class="team3">
-            <h1>Team 3</h1><br>
-            <label for="">Team Name:</label><br>
-            <input type="text" style="padding: 0.5vh; border-radius: 5px;   ">
-            <br><br>
-            <label for="">Team ID:</label><br>
-            <input type="number" style="padding: 0.5vh; border-radius: 5px;">
-            <br><br>
-            <label for="team1-r1">
-                Round 1 Score:
-            </label>
-            <input type="range" id="team1-r1" min="0" max="100" value="50">
-            <br><br>
-            <label for="">Round 2 Score:</label>
-            <input type="number" style="padding: 0.5vh; border-radius: 5px;">
-            <div class="form-group">
-                <label for="team1-r3">Round 3 Category:</label>
-                <select id="team1-r3" required></select>
+
+    <div class="container">
+        <header>
+            <h1>Campus Club Score</h1>
+            <p>Annual Inter-Department Club Competition</p>
+        </header>
+
+        <main>
+            <div class="input-section">
+                <!-- Team 1 Input -->
+                <div class="input-card team-1">
+                    <h2>Team 1</h2>
+                    <div>
+                        <label for="teamName1">Team Name</label>
+                        <input type="text" id="teamName1" placeholder="e.g., The Innovators">
+                    </div>
+                    <div>
+                        <label for="teamId1">Team ID (PRN)</label>
+                        <input type="number" id="teamId1" placeholder="e.g., 22010101">
+                    </div>
+                    <div>
+                        <label for="round1Score1">Round 1 Score: <span id="r1s1_value">50</span></label>
+                        <input type="range" id="round1Score1" min="0" max="100" value="50">
+                    </div>
+                    <div>
+                        <label for="round2Score1">Round 2 Score</label>
+                        <input type="number" id="round2Score1" min="0" max="100" placeholder="0-100">
+                    </div>
+                    <div>
+                        <label for="round3Category1">Round 3 Category</label>
+                        <select id="round3Category1" class="round3-category"></select>
+                    </div>
+                </div>
+                <!-- Team 2 Input -->
+                <div class="input-card team-2">
+                    <h2>Team 2</h2>
+                    <div>
+                        <label for="teamName2">Team Name</label>
+                        <input type="text" id="teamName2" placeholder="e.g., Creative Coders">
+                    </div>
+                    <div>
+                        <label for="teamId2">Team ID (PRN)</label>
+                        <input type="number" id="teamId2" placeholder="e.g., 22010102">
+                    </div>
+                    <div>
+                        <label for="round1Score2">Round 1 Score: <span id="r1s2_value">50</span></label>
+                        <input type="range" id="round1Score2" min="0" max="100" value="50">
+                    </div>
+                    <div>
+                        <label for="round2Score2">Round 2 Score</label>
+                        <input type="number" id="round2Score2" min="0" max="100" placeholder="0-100">
+                    </div>
+                    <div>
+                        <label for="round3Category2">Round 3 Category</label>
+                        <select id="round3Category2" class="round3-category"></select>
+                    </div>
+                </div>
+                <!-- Team 3 Input -->
+                <div class="input-card team-3">
+                    <h2>Team 3</h2>
+                    <div>
+                        <label for="teamName3">Team Name</label>
+                        <input type="text" id="teamName3" placeholder="e.g., Data Dynamos">
+                    </div>
+                    <div>
+                        <label for="teamId3">Team ID (PRN)</label>
+                        <input type="number" id="teamId3" placeholder="e.g., 22010103">
+                    </div>
+                    <div>
+                        <label for="round1Score3">Round 1 Score: <span id="r1s3_value">50</span></label>
+                        <input type="range" id="round1Score3" min="0" max="100" value="50">
+                    </div>
+                    <div>
+                        <label for="round2Score3">Round 2 Score</label>
+                        <input type="number" id="round2Score3" min="0" max="100" placeholder="0-100">
+                    </div>
+                    <div>
+                        <label for="round3Category3">Round 3 Category</label>
+                        <select id="round3Category3" class="round3-category"></select>
+                    </div>
+                </div>
             </div>
-        </div>
+
+            <div class="action-button-container">
+                <button id="calculate-btn">Track Performance</button>
+            </div>
+
+            <div class="output-section">
+                 <!-- Basic Output Card 1 -->
+                 <div id="card1" class="output-card">
+                     <h3 id="out-teamName1">Team 1 Results</h3>
+                     <p id="out-teamId1">ID: -</p>
+                     <hr>
+                     <p><b>Grade:</b> <span id="out-grade1">?</span></p>
+                     <p><b>Remark:</b> <span id="out-remark1">Pending</span></p>
+                     <p><b>Total:</b> <span id="out-total1">0.00</span></p>
+                 </div>
+                 <!-- Basic Output Card 2 -->
+                 <div id="card2" class="output-card">
+                     <h3 id="out-teamName2">Team 2 Results</h3>
+                     <p id="out-teamId2">ID: -</p>
+                     <hr>
+                     <p><b>Grade:</b> <span id="out-grade2">?</span></p>
+                     <p><b>Remark:</b> <span id="out-remark2">Pending</span></p>
+                     <p><b>Total:</b> <span id="out-total2">0.00</span></p>
+                 </div>
+                 <!-- Basic Output Card 3 -->
+                 <div id="card3" class="output-card">
+                     <h3 id="out-teamName3">Team 3 Results</h3>
+                     <p id="out-teamId3">ID: -</p>
+                     <hr>
+                     <p><b>Grade:</b> <span id="out-grade3">?</span></p>
+                     <p><b>Remark:</b> <span id="out-remark3">Pending</span></p>
+                     <p><b>Total:</b> <span id="out-total3">0.00</span></p>
+                 </div>
+            </div>
+        </main>
     </div>
 
-</body>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DEMONSTRATION of Console Methods ---
+            console.log("Welcome! The Campus Club Tracker is ready.");
 
+            // --- DEMONSTRATION of 'const' and 'let' ---
+            const NUM_TEAMS = 3;
+            const categories = ['Innovation', 'Community Impact', 'Technical Skill', 'Presentation', 'Team Spirit'];
+            const weights = { round1: 0.4, round2: 0.6 };
+            const calculateBtn = document.getElementById('calculate-btn');
+
+            // --- INITIALIZATION ---
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+            }
+
+            function populateDropdowns() {
+                const allDropdowns = document.querySelectorAll('.round3-category');
+                shuffleArray(categories);
+                allDropdowns.forEach(dropdown => {
+                    dropdown.innerHTML = '';
+                    categories.forEach(category => {
+                        const option = document.createElement('option');
+                        option.value = category;
+                        option.textContent = category;
+                        dropdown.appendChild(option);
+                    });
+                });
+            }
+            
+            function setupSliderListeners() {
+                // DEMONSTRATION: 'for' loop to iterate a known number of times
+                for (let i = 1; i <= NUM_TEAMS; i++) {
+                    const slider = document.getElementById(`round1Score${i}`);
+                    const display = document.getElementById(`r1s${i}_value`);
+                    slider.addEventListener('input', () => {
+                        display.textContent = slider.value;
+                    });
+                }
+            }
+            
+            populateDropdowns();
+            setupSliderListeners();
+
+            // --- MAIN EVENT LISTENER ---
+            calculateBtn.addEventListener('click', () => {
+                // Reset previous results and styles directly
+                for (let i = 1; i <= NUM_TEAMS; i++) {
+                    const card = document.getElementById(`card${i}`);
+                    card.classList.remove('winner-glow', 'animate-card');
+                    document.getElementById(`out-teamName${i}`).textContent = `Team ${i} Results`;
+                    document.getElementById(`out-teamId${i}`).textContent = 'ID: -';
+                    document.getElementById(`out-grade${i}`).textContent = '?';
+                    document.getElementById(`out-remark${i}`).textContent = 'Pending';
+                    document.getElementById(`out-total${i}`).textContent = '0.00';
+                }
+                
+                let teamsData = [];
+                let isValid = true;
+
+                // 1. Get and Validate Inputs from the form
+                for (let i = 1; i <= NUM_TEAMS; i++) {
+                    const teamName = document.getElementById(`teamName${i}`).value.trim();
+                    const teamId = document.getElementById(`teamId${i}`).value;
+                    const r1Score = parseInt(document.getElementById(`round1Score${i}`).value);
+                    const r2Score = parseInt(document.getElementById(`round2Score${i}`).value);
+                    const r3Category = document.getElementById(`round3Category${i}`).value;
+
+                    if (!teamName || !teamId || isNaN(r2Score)) {
+                        console.error(`Validation failed for Team ${i}: Missing information.`);
+                        alert(`Team ${i} has missing information. Please fill all fields.`);
+                        isValid = false;
+                        break;
+                    } else if (r1Score < 0 || r1Score > 100 || r2Score < 0 || r2Score > 100) {
+                        console.error(`Validation failed for Team ${i}: Score out of range.`);
+                         alert(`Scores for Team ${i} must be between 0 and 100.`);
+                        isValid = false;
+                        break;
+                    }
+
+                    teamsData.push({ index: i, name: teamName, id: teamId, r1: r1Score, r2: r2Score, category: r3Category });
+                }
+
+                if (!isValid) return; // Stop if there was a validation error
+
+                // 2. Process Data
+                let results = [];
+                for (const team of teamsData) {
+                    const { index, name, id, r1, r2, category } = team;
+                    
+                    let total = (r1 * weights.round1) + (r2 * weights.round2);
+
+                    if (r2 > 80) total += 5;
+                    if (category === 'Innovation') total += 3;
+                    
+                    total = Math.min(total, 108);
+
+                    let grade = '';
+                    if (total >= 90) {
+                        grade = 'A';
+                    } else if (total >= 75) {
+                        grade = 'B';
+                    } else if (total >= 60) {
+                        grade = 'C';
+                    } else {
+                        grade = 'F';
+                    }
+
+                    let remark = '';
+                    switch (grade) {
+                        case 'A': remark = 'Outstanding'; break;
+                        case 'B': remark = 'Strong'; break;
+                        case 'C': remark = 'Average'; break;
+                        case 'F': remark = 'Needs Improvement'; break;
+                        default: remark = 'N/A';
+                    }
+
+                    results.push({ index, name, id, total, grade, remark });
+                }
+                
+                console.log("--- Calculated Results ---");
+                console.table(results);
+
+                // 3. Find Winner with Tie-Breaker
+                let winner = results[0];
+                for (let i = 1; i < results.length; i++) {
+                    if (results[i].total > winner.total) {
+                        winner = results[i];
+                    } else if (results[i].total === winner.total) {
+                        if (results[i].name.toLowerCase() < winner.name.toLowerCase()) {
+                            winner = results[i];
+                        }
+                    }
+                }
+
+                // 4. Display Output
+                displayResults(results, winner);
+            });
+
+            // --- HELPER FUNCTION ---
+            function displayResults(results, winner) {
+                console.trace("displayResults function was called.");
+
+                results.forEach((result, index) => {
+                    const i = result.index;
+                    setTimeout(() => {
+                        document.getElementById(`out-teamName${i}`).textContent = result.name;
+                        document.getElementById(`out-teamId${i}`).textContent = `ID: ${result.id}`;
+                        document.getElementById(`out-grade${i}`).textContent = result.grade;
+                        document.getElementById(`out-remark${i}`).textContent = result.remark;
+                        document.getElementById(`out-total${i}`).textContent = result.total.toFixed(2);
+                        
+                        const card = document.getElementById(`card${i}`);
+                        card.classList.add('animate-card');
+
+                        if (winner && winner.index === i) {
+                            card.classList.add('winner-glow');
+                        }
+                    }, index * 150);
+                });
+            }
+        });
+    </script>
+</body>
 </html>
