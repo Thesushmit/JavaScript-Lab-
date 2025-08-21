@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>// 1. Reverse Number (Supports Negative Numbers)
+        function reverseNumber(num) {
+            if (typeof num !== "number" || isNaN(num)) {
+                throw new Error("Invalid number input");
+            }
+
+            const isNegative = num < 0;
+            const reversed = parseInt(
+                Math.abs(num).toString().split("").reverse().join("")
+            );
+            return isNegative ? -reversed : reversed;
+        }
+
+        function isPalindrome(num) {
+            return num === reverseNumber(num);
+        }
+
+        // 2. String Palindrome Checker
+        function isStringPalindrome(str) {
+            if (typeof str !== "string") {
+                throw new Error("Input must be a string");
+            }
+            const cleaned = str.toLowerCase().replace(/[^a-z0-9]/g, "");
+            return cleaned === cleaned.split("").reverse().join("");
+        }
+
+        // 3. Square Root with Try...Catch
+        function safeSqrt(input) {
+            try {
+                let num = parseFloat(input);
+                if (isNaN(num) || num < 0) {
+                    throw new Error("Please enter a valid non-negative number");
+                }
+                return Math.sqrt(num);
+            } catch (err) {
+                return `Error: ${err.message}`;
+            }
+        }
+
+        // 4. Arrow Function to Check Prime with Error Handling
+        const isPrime = (num) => {
+            try {
+                if (typeof num !== "number" || !Number.isInteger(num) || num < 2) {
+                    throw new Error("Input must be an integer >= 2");
+                }
+                for (let i = 2; i <= Math.sqrt(num); i++) {
+                    if (num % i === 0) return false;
+                }
+                return true;
+            } catch (err) {
+                console.log("Error:", err.message);
+                return false;
+            }
+        };
+
+        // ----------- Test Cases -----------
+
+        // 1. Reverse Number & Palindrome (Number)
+        console.log("Reversed:", reverseNumber(1234));        // 4321
+        console.log("Is Palindrome:", isPalindrome(-121));    // true
+
+        // 2. String Palindrome Check
+        console.log(isStringPalindrome("Racecar")); // true
+        console.log(isStringPalindrome("Hello"));   // false
+
+        // 3. Square Root with Try...Catch
+        console.log(safeSqrt(25));     // 5
+        console.log(safeSqrt(-9));     // Error: Please enter a valid non-negative number
+
+        // 4. Prime Number Check with Try...Catch
+        console.log(isPrime(13));      // true
+        console.log(isPrime("abc"));   // Error + false
+    </script>
+</body>
+
+</html>

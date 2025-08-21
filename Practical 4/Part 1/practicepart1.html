@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        function printname(name){
+            console.log(`Hello ${name}`);
+        }
+        // printname("sushmit");
+        // printname("Shyam");
+        const squarenum = function sqnum(a,b){
+            let sum = a + b;
+            console.log(sum);
+        }
+        // squarenum(2,3);
+        // squarenum(4,5);
+        // squarenum(9,10);
+
+        const square = (a) =>{
+            console.log(a*a);
+        }
+        // square(10);
+        // square(5);
+        // square(2);
+        function printhello(lang = "english", name){
+            if(lang === "english"){
+                console.log(`hello , ${name}`);
+            }
+            else if (lang === "hindi"){
+                console.log(`namaste, ${name}`);
+            }
+            else if(lang === "spanish"){
+                console.log(`hola, ${name}`);
+            }
+
+        }
+        // printhello("hindi", "sushmit");
+
+        function ctof(temp){
+            console.log((temp * 9 / 5 )+ 32, "F");
+        }
+        // ctof(30);
+        const nowords = (str) =>{
+            let count = 0
+            for(i = 0 ; i < str.length ; i++){
+                if(str[i] === " "){
+                    count++;
+                }
+            }
+            console.log(count);
+        }
+        // nowords("i love javascript ");   
+
+    </script>
+</body>
+</html>
