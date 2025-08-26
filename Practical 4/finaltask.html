@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        function showMenu() {
+            console.log("Choose an option:");
+            console.log("1. Compare two PINs and show the stronger one.");
+            console.log("2. Generate a factorial hash for a number.");
+            console.log("3. Check if a message contains “JavaScript”.");
+            console.log("4. Store and access a secret message (closure).");
+            console.log("5. Reverse a number and check if it’s a palindrome.");
+            console.log("6. Check if a word is a palindrome.");
+            console.log("7. Find square root with error handling.");
+            console.log("8. Check if a number is prime.");
+            console.log("0. Exit.");
+        }
+
+        function isgreater(a, b) {
+            if (a > b) {
+                console.log(`a is greater ${a} > ${b}`);
+            }
+            else {
+                console.log(`b is greater ${a} < ${b}`);
+            }
+        }
+
+        const fact = function factorial(a) {
+            let num = a;
+            let sum = 1;
+            while (num > 0) {
+                sum = sum * num;
+                num = num - 1;
+            }
+            console.log(sum);
+        }
+
+        const checkscript = str => {
+            if (str.toLowerCase().includes("javascript")) {
+                console.log(`True js is present in : ${str}.`)
+            }
+            else {
+                console.log(`False js is not present in : ${str}.`)
+            }
+        }
+
+        function checkpas(pass) {
+            let fpass = "1234";
+            return function () {
+                if (pass === fpass) {
+                    console.log("Correct");
+                }
+                else {
+                    console.log("access denied");
+                }
+            }
+        }
+
+        function tryone(num) {
+            try {
+                if (isNaN(num)) throw "not a number";
+                let sa = num.toString();
+                let reversed = sa.split('').reverse().join('');
+                console.log("Reversed:", reversed);
+                if (reversed === sa) {
+                    console.log("Palindrome: True");
+                } else {
+                    console.log("Palindrome: False");
+                }
+            }
+            catch (err) {
+                console.log("Error:" + err)
+            }
+        }
+
+        function isWordPalindrome(input) {
+            if (input === null) return; // Cancelled
+            let cleaned = input.replace(/\s+/g, '').toLowerCase();
+            let reversed = cleaned.split('').reverse().join('');
+            if (cleaned === reversed) {
+                console.log(true);
+            } else {
+                console.log(false);
+            }
+        }
+
+        function sqrt(num) {
+            try {
+                if (typeof num !== "number" || isNaN(num)) throw "Invalid input";
+                if (num < 0) throw "Negative numbers not allowed";
+                console.log(Math.sqrt(num));
+            } catch (err) {
+                console.log("Error: " + err);
+            }
+        }
+
+        const isPrime = (num) => {
+            try {
+                if (typeof num !== "number" || isNaN(num) || num < 2 || !Number.isInteger(num)) throw "Invalid input";
+                for (let i = 2; i <= Math.sqrt(num); i++) {
+                    if (num % i === 0) return false;
+                }
+                return true;
+            } catch (err) {
+                console.log("Error: " + err);
+                return false;
+            }
+        }
+
+        // Menu simulation using prompt (works in browser)
+        function mainMenu() {
+            while (true) {
+                showMenu();
+                let choice = prompt("Enter your choice (0-8):");
+                if (choice === null) break;
+                switch (choice) {
+                    case "1":
+                        let pin1 = prompt("Enter first PIN:");
+                        let pin2 = prompt("Enter second PIN:");
+                        if (pin1 !== null && pin2 !== null && !isNaN(pin1) && !isNaN(pin2)) {
+                            isgreater(Number(pin1), Number(pin2));
+                        } else {
+                            console.log("Invalid input.");
+                        }
+                        break;
+                    case "2":
+                        let num = prompt("Enter a number for factorial:");
+                        if (num !== null && !isNaN(num)) {
+                            fact(Number(num));
+                        } else {
+                            console.log("Invalid input.");
+                        }
+                        break;
+                    case "3":
+                        let msg = prompt("Enter a message:");
+                        if (msg !== null) {
+                            checkscript(msg);
+                        }
+                        break;
+                    case "4":
+                        let secret = prompt("Set your secret message:");
+                        if (secret !== null) {
+                            let getSecret = checkpas(secret);
+                            getSecret();
+                        }
+                        break;
+                    case "5":
+                        let revNum = prompt("Enter a number to reverse and check palindrome:");
+                        if (revNum !== null && !isNaN(revNum)) {
+                            tryone(revNum);
+                        } else {
+                            console.log("Invalid input.");
+                        }
+                        break;
+                    case "6":
+                        let word = prompt("Enter a word to check palindrome:");
+                        if (word !== null) {
+                            isWordPalindrome(word);
+                        }
+                        break;
+                    case "7":
+                        let sqNum = prompt("Enter a number to find square root:");
+                        if (sqNum !== null && !isNaN(sqNum)) {
+                            sqrt(Number(sqNum));
+                        } else {
+                            console.log("Invalid input.");
+                        }
+                        break;
+                    case "8":
+                        let primeNum = prompt("Enter a number to check if prime:");
+                        if (primeNum !== null && !isNaN(primeNum)) {
+                            console.log(isPrime(Number(primeNum)));
+                        } else {
+                            console.log("Invalid input.");
+                        }
+                        break;
+                    case "0":
+                        console.log("Exiting...");
+                        return;
+                    default:
+                        console.log("Invalid choice.");
+                }
+                console.log("-----------------------------");
+            }
+        }
+
+        mainMenu();
+</script>
+</body>
+
+</html>
