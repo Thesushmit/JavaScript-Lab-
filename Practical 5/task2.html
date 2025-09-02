@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Array Operations</title>
+</head>
+<body>
+    <h2>Student Array Operations</h2>
+    <script>
+        const students = [
+            { id: 1, name: "Amit", marks: 65 },
+            { id: 2, name: "Priya", marks: 48 },
+            { id: 3, name: "Rahul", marks: 75 },
+            { id: 4, name: "Sneha", marks: 52 },
+            { id: 5, name: "Vikas", marks: 39 }
+        ];
+
+        const names = students.map(student => student.name);
+
+        const passedStudents = students.filter(student => student.marks > 50);
+
+        const totalMarks = students.reduce((sum, student) => sum + student.marks, 0);
+        const avgMarks = (students.length > 0) ? (totalMarks / students.length).toFixed(2) : 0;
+
+        console.log("Student Names:", names);
+        console.log("Students with marks > 50:", passedStudents.map(s => s.name));
+        console.log("Average Marks:", avgMarks);
+
+        console.log("Report Card:");
+        students.forEach(student => {
+            console.log(`ID: ${student.id}, Name: ${student.name}, Marks: ${student.marks}`);
+        });
+    </script>

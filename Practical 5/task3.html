@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- sum of numbers , add 10 element in array using loop and prompt and print sum in alert -->
+    <script>
+        let arr = [];
+        let sum = 0;
+        for(let i = 0; i <= 10 ;i++){
+            let num = Number(prompt("Enter number: "));
+            arr.push(num);
+        }
+        for(let i = 0;i<=10;i++){
+            sum = sum + arr[i];
+        }
+        console.log(`array : ${arr}`)
+        let s = alert("the sum of 10 number is "+sum);
+    </script>
+</body>
+</html>
