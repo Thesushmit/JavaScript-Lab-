@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Final Task 5 </h1>
+    <script>
+        let cart = [
+            { id: 1, name: "Pen", price: 20, qty: 2, category: "stationery" },
+            { id: 2, name: "Mug", price: 150, qty: 1, category: "kitchen" },
+            { id: 3, name: "Notebook", price: 80, qty: 3, category: "stationery" },
+            { id: 4, name: "Headphones", price: 500, qty: 1, category: "electronics" }
+        ];
+
+        let itemTotals = cart.map(item => item.price * item.qty);
+
+        let discountedItemTotals = cart.map(item => {
+            let subtotal = item.price * item.qty;
+            let discount = 0;
+            if (item.qty >= 3) {
+                discount = subtotal * 0.05;
+                subtotal -= discount;
+            }
+            return { ...item, subtotal, discount };
+        });
+
+        let stationeryItems = cart.filter(item => item.category === "stationery");
+        let stationeryTotal = stationeryItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+        let stationeryDiscount = 0;
+        if (stationeryTotal > 200) {
+            stationeryDiscount = stationeryTotal * 0.10;
+        }
+
+        let subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+        let itemDiscounts = discountedItemTotals.reduce((sum, item) => sum + item.discount, 0);
+        let finalTotal = subtotal - itemDiscounts - stationeryDiscount;
+
+        discountedItemTotals.forEach(item => {
+            let baseTotal = item.price * item.qty;
+            if (item.discount > 0) {
+                console.log(`Item: ${item.name} (x${item.qty}) = ${baseTotal} → discount applied`);
+            } else {
+                console.log(`Item: ${item.name} (x${item.qty}) = ${baseTotal}`);
+            }
+        });
+
+        console.log("---------------------------------");
+        console.log("Subtotal:", subtotal.toFixed(2));
+        console.log("Item Discounts:", itemDiscounts.toFixed(2));
+        console.log("Stationery Discount:", stationeryDiscount.toFixed(2));
+        console.log("Final Total:", finalTotal.toFixed(2));
+
+    </script>
+
+</body>
+
+</html>
