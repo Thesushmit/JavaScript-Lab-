@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>task 1 </h1>
+    <script>
+        function task1(str1) {
+            console.log(str1)
+            let newstr1 = str1.trim().toLowerCase()
+            console.log(newstr1)
+            let firstlet = newstr1.charAt(0).toUpperCase()
+            let lastlet = newstr1.charAt(5).toUpperCase()
+            let updated_str = firstlet + newstr1.slice(1, 4) + " " + lastlet + newstr1.slice(6, 8)
+            console.log(updated_str)
+
+
+        }
+        // task1("jOhN doE")
+        function reverse(str1) {
+            console.log(str1)
+            let newRstr = str1.split("").reverse().join("")
+            console.log(newRstr);
+        }
+        // reverse("JavaScript")
+
+        function validEmail() {
+            let email = "student@example.com"
+            console.log(/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(email));
+        }
+        // validEmail()
+
+        function replacespace() {
+            const input = "JavaScript   is    fun";
+            const output = input.replace(/\s+/g, ' ');
+            console.log(input)
+            console.log(output);  
+        }
+        // replacespace()
+
+        function count7(){
+            let str1 = "Hello world, welcome to the JavaScript lab"
+            let newstr1 = str1.split(" ")
+            console.log(newstr1)
+        }
+        count7()
+    </script>
+</body>
+
+</html>
