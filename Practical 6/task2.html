@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        function checkstartwith(){
+            let str = prompt("Enter String to check the char start with S");
+            let regx = /^S/;
+            console.log(str);
+            console.log("String Start with S: "+regx.test(str));
+        }
+        // checkstartwith();
+        function checkendwith() {
+            let str = "start";
+            let regx = /t$/;
+            console.log("String = "+str);
+            console.log("String end with t: "+ regx.test(str));
+        }
+        // checkendwith();
+        function exceptnew(){
+            let str = "Sushmit\n\nPartakke";
+            let str2 = "S P";
+            let regx = /S.P/;
+            console.log("String 1 = "+str);
+            console.log("String dont have new line:"+regx.test(str));
+            console.log("String 2 = "+str2);
+            console.log("String dont have new line:"+regx.test(str2));
+        }
+        // exceptnew();
+        function zeroormoreocc() {
+            let str = "Sushmit Partakke";
+            // let regx = /S*ushmit/;
+            console.log("String contain 0 or more S:"+str.match(/S*ushmit/));
+
+        }
+        // zeroormoreocc()
+        function oneormoreocc(){
+            let str = "Sushmit";
+            console.log("String contain 1 or more S:"+str.match(/S+/));
+
+        }
+        // oneormoreocc()
+        function oneorzero(){
+            let str = "SSuusshhmmiitt";
+            console.log("String contain 0 or 1 S:"+str.match(/S?/));
+        }
+        // oneorzero();
+        function match_more_than_one_char(){
+            let str = "Susmit hello";
+            console.log("String contain sh:"+str.match(/Su[sh]mit/));
+
+        }
+        // match_more_than_one_char()
+        function match_more_than_char(){
+            let str = "Susmit  Sumit hello";
+            console.log("String contain sh:"+str.match(/Su[^Dsh]mit/));
+
+        }
+        match_more_than_char()
+      /*
+        // Exactly n times: /\d{3}/ matches three digits
+        let str1 = "12345";
+        console.log("Exactly 3 digits:", str1.match(/\d{3}/));
+
+        // At least n times: /\d{2,}/ matches two or more digits
+        let str2 = "987654";
+        console.log("At least 2 digits:", str2.match(/\d{2,}/));
+
+        // Between n and m times: /\d{2,4}/ matches 2, 3, or 4 digits
+        let str3 = "123456";
+        console.log("Between 2 and 4 digits:", str3.match(/\d{2,4}/));
+
+        // \d Digit (0-9): /\d/ matches 1
+        let str4 = "A1B2";
+        console.log("Digit:", str4.match(/\d/));
+
+        // \w Word character (letters, digits, underscore): /\w/ matches A, 1
+        let str5 = "A_1";
+        console.log("Word character:", str5.match(/\w/));
+
+        // \s Whitespace (space, tab, newline): /\s/ matches space
+        let str6 = "Hello World";
+        console.log("Whitespace:", str6.match(/\s/));
+
+        // OR operator: /cat|dog/ matches 'cat' or 'dog'
+        let str7 = "I have a cat and a dog.";
+        console.log("OR operator (cat or dog):", str7.match(/cat|dog/));
+        // <!DOCTYPE html>
+*/
+        let mobileRegex = /^[6-9]\d{9}$/;
+        let validMobile = "9876543210";
+        let invalidMobile = "1234567890";
+        console.log("Valid Mobile:", mobileRegex.test(validMobile));
+        console.log("Invalid Mobile:", mobileRegex.test(invalidMobile));
+
+        let dateText = "Today's date is 12/09/2025 and tomorrow will be 13/09/2025.";
+        let dateRegex = /\d{2}\/\d{2}\/\d{4}/g;
+        console.log("Extracted Dates:", dateText.match(dateRegex));
+
+        let passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        let strongPassword = "StrongPass1!";
+        let weakPassword = "weakpass";
+        console.log("Strong Password:", passwordRegex.test(strongPassword));
+        console.log("Weak Password:", passwordRegex.test(weakPassword));
+
+        let text = "This is is a test test";
+        let dupRegex = /\b(\w+)\s+\1\b/g;
+        let duplicates = [];
+        let match;
+        while ((match = dupRegex.exec(text)) !== null) {
+            duplicates.push(match[1]);
+        }
+        console.log("Duplicate Words:", duplicates);
+
+        let tweet = "Learning #JavaScript is #fun and #exciting!";
+        let hashtags = tweet.match(/#[A-Za-z0-9_]+/g);
+        console.log("Extracted Hashtags:", hashtags);
+    
+    </script>
+</body>
+</html>
