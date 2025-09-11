@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Smart Resume Data Extractor</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+    textarea { width: 100%; height: 180px; padding: 10px; }
+    button { padding: 10px 20px; margin-top: 10px; cursor: pointer; }
+    pre { background: #f4f4f4; padding: 10px; border-radius: 6px; }
+  </style>
+</head>
+<body>
+
+  <h2>Smart Resume Data Extractor</h2>
+  <p>Paste raw resume text below and click <b>Process Resume</b> to extract details.</p>
+
+  <textarea id="resumeInput">
+Name:   jOhN    doE    
+Email:   john.doe@Example.com     
+Phone:  9876543210   
+
+Skills:   HTML, CSS,   JavaScript,  Python,   SQL     
+
+Extra: Contact me at john.altmail@example.org  
+#developer #coder
+  </textarea>
+  <br>
+  <button onclick="handleProcess()">Process Resume</button>
+
+  <h3>Output:</h3>
+  <pre id="output"></pre>
+
+  <script>
+    // 1. Format Name
+    function formatName(rawName) {
+      return rawName
+        .trim()
+        .replace(/\s+/g, " ")
+        .split(" ")
+        .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+        .join(" ");
+    }
+
+    // 2. Extract and Validate Emails
+    function extractEmails(text) {
+      const emails = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}/g) || [];
+      return emails.map(e => e.toLowerCase());
+    }
+
+    // 3. Validate Mobile Number
+    function validateMobile(number) {
+      const clean = number.replace(/\D/g, "");
+      return /^[6-9]\d{9}$/.test(clean) ? clean : "Invalid phone number";
+    }
+
+    // 4. Process Skills
+    function processSkills(rawSkills) {
+      return rawSkills.split(",").map(s => s.trim()).filter(Boolean);
+    }
+
+    // 5. Extract Hashtags
+    function extractHashtags(text) {
+      return text.match(/#[\w']+/g) || [];
+    }
+
+    // 6. Word Count
+    function countWords(text) {
+      return text.trim().split(/\s+/).filter(Boolean).length;
+    }
+
+    // 7. Vowel Count
+    function countVowels(text) {
+      const matches = text.match(/[aeiouAEIOU]/g);
+      return matches ? matches.length : 0;
+    }
+
+    // Main processing
+    function processResume(resumeText) {
+      const output = {};
+
+      const nameMatch = resumeText.match(/Name:\s*([^\n]+)/i);
+      if (nameMatch) output.name = formatName(nameMatch[1]);
+
+      const emails = extractEmails(resumeText);
+      output.email = emails[0] || "";
+      output.emailCount = emails.length;
+
+      const phoneMatch = resumeText.match(/Phone:\s*([^\n]+)/i);
+      if (phoneMatch) output.phone = validateMobile(phoneMatch[1]);
+
+      const skillsMatch = resumeText.match(/Skills:\s*([^\n]+)/i);
+      if (skillsMatch) output.skills = processSkills(skillsMatch[1]);
+
+      output.hashtags = extractHashtags(resumeText);
+      output.wordCount = countWords(resumeText);
+      output.vowelCount = countVowels(resumeText);
+
+      return output;
+    }
+
+    // Button handler
+    function handleProcess() {
+      const resumeText = document.getElementById("resumeInput").value;
+      const result = processResume(resumeText);
+      document.getElementById("output").textContent = JSON.stringify(result, null, 2);
+    }
+  </script>
+
+</body>
+</html>
