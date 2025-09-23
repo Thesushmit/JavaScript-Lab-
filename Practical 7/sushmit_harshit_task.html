@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dynamic Quiz</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding:20px; }
+    .question { margin-bottom: 15px; }
+    .options button { display:block; margin:5px 0; }
+    #timer { font-weight:bold; margin-bottom:10px; color:darkred; }
+  </style>
+</head>
+<body>
+  <h2>Dynamic Quiz</h2>
+  <div id="timer"></div>
+  <div id="quiz"></div>
+  <button id="submit">Submit</button>
+  <h3 id="score"></h3>
+
+  <script>
+    
+    const questions = [
+      { q: "2 + 2 = ?", options: ["3","4","5"], answer: "4" },
+      { q: "Capital of France?", options: ["Paris","Rome","London"], answer: "Paris" },
+      { q: "JS keyword for constant?", options: ["let","var","const"], answer: "const" }
+    ];
+
+    const quizContainer = document.getElementById('quiz');
+    const scoreEl = document.getElementById('score');
+    const timerEl = document.getElementById('timer');
+    let selected = {};
+    let timeLeft = 30; // seconds
+
+    // 2. Dynamically create question <div>s
+    questions.forEach((item, index) => {
+      const qDiv = document.createElement('div');
+      qDiv.className = 'question';
+      qDiv.innerHTML = `<strong>${index+1}. ${item.q}</strong>`;
+
+      const optsDiv = document.createElement('div');
+      optsDiv.className = 'options';
+
+      item.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.textContent = opt;
+        btn.onclick = () => { selected[index] = opt; };
+        optsDiv.appendChild(btn);
+      });
+
+      qDiv.appendChild(optsDiv);
+      quizContainer.appendChild(qDiv);
+    });
+
+   
+    const timer = setInterval(() => {
+      timerEl.textContent = `Time left: ${timeLeft}s`;
+      timeLeft--;
+      if (timeLeft < 0) {
+        clearInterval(timer);
+        gradeQuiz();
+      }
+    }, 1000);
+
+    
+    document.getElementById('submit').addEventListener('click', gradeQuiz);
+
+    function gradeQuiz() {
+      clearInterval(timer);
+      let score = 0;
+      questions.forEach((item, i) => {
+        if (selected[i] === item.answer) score++;
+      });
+      scoreEl.textContent = `Your Score: ${score}/${questions.length}`;
+    }
+  </script>
+</body>
+</html>
