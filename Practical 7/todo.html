@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Advanced To-Do List</title>
+  <style>
+    li { padding: 6px; transition: background 0.3s; }
+    li:hover { background: #f0f0f0; }
+    .completed span { text-decoration: line-through; color: gray; }
+    button { margin-left: 5px; }
+    #controls { margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h2>To-Do List</h2>
+  <input type="text" id="taskInput" placeholder="Enter a task">
+  <button onclick="addTask()">Add</button>
+  <div id="controls">
+    <button onclick="sortTasks(true)">Sort A–Z</button>
+    <button onclick="sortTasks(false)">Sort Z–A</button>
+  </div>
+  <p>Total tasks: <span id="taskCount">0</span></p>
+  <ul id="todoList"></ul>
+
+  <script>
+    const input = document.getElementById('taskInput');
+    const todoList = document.getElementById('todoList');
+    const taskCount = document.getElementById('taskCount');
+
+    // Load tasks from localStorage
+    window.onload = () => {
+      const saved = JSON.parse(localStorage.getItem('tasks')) || [];
+      saved.forEach(t => createTaskElement(t.text, t.completed));
+      updateCount();
+    };
+
+    // Add task on Enter
+    input.addEventListener('keypress', e => { if (e.key === 'Enter') addTask(); });
+
+    function addTask() {
+      const taskText = input.value.trim();
+      if (!taskText) return;
+
+      // Check duplicates
+      const existing = [...todoList.querySelectorAll('li span')]
+                       .some(span => span.textContent === taskText);
+      if (existing) { alert('Task already exists!'); return; }
+
+      createTaskElement(taskText);
+      input.value = '';
+      saveTasks();
+      updateCount();
+    }
+
+    function createTaskElement(text, completed=false) {
+      const li = document.createElement('li');
+      if (completed) li.classList.add('completed');
+
+      const span = document.createElement('span');
+      span.textContent = text;
+
+      // Complete toggle
+      const completeBtn = document.createElement('button');
+      completeBtn.textContent = 'Complete';
+      completeBtn.onclick = () => {
+        li.classList.toggle('completed');
+        saveTasks();
+      };
+
+      // Inline edit
+      const editBtn = document.createElement('button');
+      editBtn.textContent = 'Edit';
+      editBtn.onclick = () => {
+        // Create input for inline edit
+        const editInput = document.createElement('input');
+        editInput.type = 'text';
+        editInput.value = span.textContent;
+        li.insertBefore(editInput, span);
+        li.removeChild(span);
+        editBtn.disabled = true;
+
+        editInput.addEventListener('keypress', e => {
+          if (e.key === 'Enter') finishEdit();
+        });
+        editInput.addEventListener('blur', finishEdit);
+
+        function finishEdit() {
+          const newText = editInput.value.trim();
+          if (!newText) { alert('Task cannot be empty'); return; }
+
+          // Check duplicates excluding this one
+          const duplicate = [...todoList.querySelectorAll('li span')]
+              .some(s => s.textContent === newText);
+          if (duplicate) { alert('Task already exists!'); return; }
+
+          span.textContent = newText;
+          li.insertBefore(span, editInput);
+          li.removeChild(editInput);
+          editBtn.disabled = false;
+          saveTasks();
+        }
+        editInput.focus();
+      };
+
+      // Delete with confirm
+      const deleteBtn = document.createElement('button');
+      deleteBtn.textContent = 'Delete';
+      deleteBtn.onclick = () => {
+        if (confirm('Delete this task?')) {
+          li.remove();
+          saveTasks();
+          updateCount();
+        }
+      };
+
+      li.appendChild(span);
+      li.appendChild(completeBtn);
+      li.appendChild(editBtn);
+      li.appendChild(deleteBtn);
+      todoList.appendChild(li);
+    }
+
+    function updateCount() {
+      taskCount.textContent = todoList.querySelectorAll('li').length;
+    }
+
+    function saveTasks() {
+      const tasks = [...todoList.querySelectorAll('li')].map(li => ({
+        text: li.querySelector('span').textContent,
+        completed: li.classList.contains('completed')
+      }));
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+      updateCount();
+    }
+
+    function sortTasks(ascending=true) {
+      const tasks = [...todoList.querySelectorAll('li')];
+      tasks.sort((a,b) => {
+        const textA = a.querySelector('span').textContent.toLowerCase();
+        const textB = b.querySelector('span').textContent.toLowerCase();
+        return ascending ? textA.localeCompare(textB) : textB.localeCompare(textA);
+      });
+      tasks.forEach(li => todoList.appendChild(li));
+      saveTasks();
+    }
+  </script>
+</body>
+</html>
