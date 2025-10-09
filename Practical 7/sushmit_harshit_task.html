@@ -7,12 +7,12 @@
   <style>
     body { font-family: Arial, sans-serif; padding:20px; }
     .question { margin-bottom: 15px; }
-    .options button { display:block; margin:5px 0; }
+    .options button { display:block; margin:5px 0;}
     #timer { font-weight:bold; margin-bottom:10px; color:darkred; }
   </style>
 </head>
 <body>
-  <h2>Dynamic Quiz</h2>
+  <h2>Quiz</h2>
   <div id="timer"></div>
   <div id="quiz"></div>
   <button id="submit">Submit</button>
@@ -26,13 +26,13 @@
       { q: "JS keyword for constant?", options: ["let","var","const"], answer: "const" }
     ];
 
-    const quizContainer = document.getElementById('quiz');
+    const quizContainer = document.getElementById('quiz'); 
     const scoreEl = document.getElementById('score');
     const timerEl = document.getElementById('timer');
     let selected = {};
-    let timeLeft = 30; // seconds
+    let timeLeft = 5; 
 
-    // 2. Dynamically create question <div>s
+   
     questions.forEach((item, index) => {
       const qDiv = document.createElement('div');
       qDiv.className = 'question';
@@ -44,7 +44,10 @@
       item.options.forEach(opt => {
         const btn = document.createElement('button');
         btn.textContent = opt;
-        btn.onclick = () => { selected[index] = opt; };
+        btn.onclick = () => {
+          selected[index] = opt;
+          btn.style.color = "green";
+        };
         optsDiv.appendChild(btn);
       });
 
@@ -66,7 +69,7 @@
     document.getElementById('submit').addEventListener('click', gradeQuiz);
 
     function gradeQuiz() {
-      clearInterval(timer);
+      clearInterval(timer); 
       let score = 0;
       questions.forEach((item, i) => {
         if (selected[i] === item.answer) score++;

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gym Admission Form</title>
+  <script>
+    function checkAllValid() {
+      let form = document.forms["gymForm"];
+      let valid = true;
+
+      // Check all regular input elements
+      for (let i = 0; i < form.elements.length; i++) {
+        let el = form.elements[i];
+        if (el.type === "submit" || el.type === "reset") continue;
+
+        if (el.willValidate && !el.checkValidity()) {
+          valid = false;
+          break;
+        }
+      }
+
+      // Extra manual checks
+      let genderChecked = document.querySelector('input[name="gender"]:checked');
+      let termsChecked = document.getElementById("terms").checked;
+      if (!genderChecked || !termsChecked) valid = false;
+
+      document.getElementById("submitBtn").disabled = !valid;
+    }
+
+    function setCustomMessages() {
+      let form = document.forms["gymForm"];
+
+      form["name"].oninvalid = function() {
+        this.setCustomValidity("Enter your full name (min 3 letters, alphabets only)");
+      }
+      form["email"].oninvalid = function() {
+        this.setCustomValidity("Enter a valid email address");
+      }
+      form["age"].oninvalid = function() {
+        this.setCustomValidity("Age must be between 18 and 60");
+      }
+      form["phone"].oninvalid = function() {
+        this.setCustomValidity("Enter a valid 10-digit phone number");
+      }
+      form["dob"].oninvalid = function() {
+        this.setCustomValidity("Enter a valid Date of Birth (not in future)");
+      }
+      form["photo"].oninvalid = function() {
+        this.setCustomValidity("Upload a JPG or PNG image under 1MB");
+      }
+      form["membershipMonths"].oninvalid = function() {
+        this.setCustomValidity("Enter months between 1 and 12");
+      }
+    }
+
+    function validateField(field) {
+      let value = field.value.trim();
+      let id = field.id + "Error";
+      let error = document.getElementById(id);
+
+      field.style.borderColor = "";
+      error.innerHTML = "";
+
+      switch (field.name) {
+        case "name":
+          if (value === "") {
+            error.innerHTML = "Name is required";
+            field.style.borderColor = "red";
+          } else if (!/^[A-Za-z ]+$/.test(value)) {
+            error.innerHTML = "Only alphabets allowed";
+            field.style.borderColor = "red";
+          } else if (value.length < 3) {
+            error.innerHTML = "Must be at least 3 characters";
+            field.style.borderColor = "red";
+          } else {
+            error.innerHTML = "Looks good";
+            field.style.borderColor = "green";
+          }
+          break;
+
+        case "email":
+          if (!/^[^ ]+@[^ ]+\.[a-z]{2,3}$/.test(value)) {
+            error.innerHTML = "Invalid email format";
+            field.style.borderColor = "red";
+          } else {
+            error.innerHTML = "Valid email";
+            field.style.borderColor = "green";
+          }
+          break;
+
+        case "age":
+          if (value < 18 || value > 60 || value === "") {
+            error.innerHTML = "Age must be between 18 and 60";
+            field.style.borderColor = "red";
+          } else {
+            error.innerHTML = "Valid age";
+            field.style.borderColor = "green";
+          }
+          break;
+
+        case "password":
+          let pattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@#$%^&+=]).{8,}$/;
+          if (!pattern.test(value)) {
+            error.innerHTML = "Weak password (need upper, lower, number, special char)";
+            field.style.borderColor = "red";
+          } else {
+            error.innerHTML = "Strong password";
+            field.style.borderColor = "green";
+          }
+          break;
+
+        case "confirmPassword":
+          let pass = document.getElementById("password").value;
+          if (value !== pass) {
+            error.innerHTML = "Passwords do not match";
+            field.style.borderColor = "red";
+          } else {
+            error.innerHTML = "Passwords match";
+            field.style.borderColor = "green";
+          }
+          break;
+
+        case "phone":
+          if (!/^[0-9]{10}$/.test(value)) {
+            error.innerHTML = "Must be exactly 10 digits";
+            field.style.borderColor = "red";
+          } else {
+            error.innerHTML = "Valid phone number";
+            field.style.borderColor = "green";
+          }
+          break;
+
+        case "dob":
+          let today = new Date();
+          let dob = new Date(value);
+          if (dob > today || value === "") {
+            error.innerHTML = "DOB cannot be in the future";
+            field.style.borderColor = "red";
+          } else {
+            error.innerHTML = "Valid date";
+            field.style.borderColor = "green";
+          }
+          break;
+
+        case "membershipMonths":
+          if (value === "" || value < 1 || value > 12) {
+            error.innerHTML = "Enter months between 1 and 12";
+            field.style.borderColor = "red";
+          } else {
+            error.innerHTML = "Membership duration valid";
+            field.style.borderColor = "green";
+          }
+          break;
+
+        case "photo":
+          let file = field.files[0];
+          if (!file) {
+            error.innerHTML = "Please upload a file";
+            break;
+          }
+          if (!(file.name.endsWith(".jpg") || file.name.endsWith(".png"))) {
+            error.innerHTML = "Only JPG/PNG allowed";
+            field.style.borderColor = "red";
+          } else if (file.size > 1024 * 1024) {
+            error.innerHTML = "File exceeds 1MB";
+            field.style.borderColor = "red";
+          } else {
+            error.innerHTML = "File valid";
+            field.style.borderColor = "green";
+          }
+          break;
+      }
+
+      checkAllValid();
+    }
+
+    function validateSelection() {
+      let gender = document.querySelector('input[name="gender"]:checked');
+      let genderError = document.getElementById("genderError");
+      genderError.innerHTML = gender ? "Gender selected" : "Please select gender";
+
+      let terms = document.getElementById("terms");
+      let termsError = document.getElementById("termsError");
+      termsError.innerHTML = terms.checked ? "Terms accepted" : "Accept terms to continue";
+
+      checkAllValid();
+    }
+
+    function handleSubmit(event) {
+      event.preventDefault();
+      let form = document.forms["gymForm"];
+      if (!form.checkValidity()) {
+        alert("Please fix all errors before submitting!");
+        return false;
+      }
+
+      // Confirmation preview box
+      let name = form["name"].value;
+      let email = form["email"].value;
+      let membership = form["membershipMonths"].value;
+
+      alert(`Form submitted successfully!\n\nWelcome to FitZone Gym!\nName: ${name}\nEmail: ${email}\nMembership: ${membership} months`);
+      return true;
+    }
+
+    function resetForm() {
+      let spans = document.querySelectorAll("span");
+      spans.forEach(s => s.innerHTML = "");
+      let inputs = document.querySelectorAll("input, select");
+      inputs.forEach(i => i.style.borderColor = "");
+      document.getElementById("submitBtn") = true;
+    }
+
+    window.onload = function() {
+      setCustomMessages();
+      document.getElementById("submitBtn").disabled = true;
+      console.log("Total form elements:", document.forms["gymForm"].length);
+    }
+  </script>
+</head>
+<body>
+
+  <h2>Gym Admission Form</h2>
+
+  <form name="gymForm" id="gymForm" onsubmit="return handleSubmit(event);" onreset="resetForm();">
+    <label>Full Name:</label><br>
+    <input type="text" id="name" name="name" required oninput="validateField(this)" onblur="validateField(this)"><br>
+    <span id="nameError"></span><br>
+
+    <label>Email:</label><br>
+    <input type="email" id="email" name="email" required oninput="validateField(this)" onblur="validateField(this)"><br>
+    <span id="emailError"></span><br>
+
+    <label>Age:</label><br>
+    <input type="number" id="age" name="age" required oninput="validateField(this)" onblur="validateField(this)"><br>
+    <span id="ageError"></span><br>
+
+    <label>Gender:</label><br>
+    <input type="radio" name="gender" value="Male" onchange="validateSelection()"> Male
+    <input type="radio" name="gender" value="Female" onchange="validateSelection()"> Female
+    <input type="radio" name="gender" value="Other" onchange="validateSelection()"> Other<br>
+    <span id="genderError"></span><br>
+
+    <label>Membership Duration (in months):</label><br>
+    <input type="number" id="membershipMonths" name="membershipMonths" required oninput="validateField(this)" onblur="validateField(this)" min="1" max="12"><br>
+    <span id="membershipMonthsError"></span><br>
+
+    <label>Password:</label><br>
+    <input type="password" id="password" name="password" required oninput="validateField(this)" onblur="validateField(this)"><br>
+    <span id="passwordError"></span><br>
+
+    <label>Confirm Password:</label><br>
+    <input type="password" id="confirmPassword" name="confirmPassword" required oninput="validateField(this)" onblur="validateField(this)"><br>
+    <span id="confirmPasswordError"></span><br>
+
+    <label>Phone:</label><br>
+    <input type="text" id="phone" name="phone" required maxlength="10" oninput="validateField(this)" onblur="validateField(this)"><br>
+    <span id="phoneError"></span><br>
+
+    <label>Date of Birth:</label><br>
+    <input type="date" id="dob" name="dob" required onchange="validateField(this)" onblur="validateField(this)"><br>
+    <span id="dobError"></span><br>
+
+    <label>Profile Photo:</label><br>
+    <input type="file" id="photo" name="photo" required onchange="validateField(this)"><br>
+    <span id="photoError"></span><br>
+
+    <input type="checkbox" id="terms" name="terms" onchange="validateSelection()"> I agree to the terms & conditions<br>
+    <span id="termsError"></span><br>
+
+    <input type="submit" id="submitBtn" value="Submit">
+    <input type="reset" value="Reset">
+  </form>
+
+</body>
+</html>

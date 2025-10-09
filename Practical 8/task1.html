@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gym Admission Form</title>
+  <script>
+    // Live validation for Name
+    function validateName() {
+      let name = document.forms["gymForm"]["name"].value;
+      let error = document.getElementById("nameError");
+
+      if (name.trim() === "") {
+        error.innerHTML = "Name is required";
+      } else if (name.length < 3) {
+        error.innerHTML = "Name must be at least 3 characters";
+      } else {
+        error.innerHTML = "";
+      }
+    }
+
+    // Live validation for Email
+    function validateEmail() {
+      let email = document.forms["gymForm"]["email"].value;
+      let error = document.getElementById("emailError");
+      let pattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+
+      if (email.trim() === "") {
+        error.innerHTML = "Email is required";
+      } else if (!email.match(pattern)) {
+        error.innerHTML = "Invalid email format";
+      } else {
+        error.innerHTML = "";
+      }
+    }
+
+    // Live validation for Age
+    function validateAge() {
+      let age = document.forms["gymForm"]["age"].value;
+      let error = document.getElementById("ageError");
+
+      if (age === "") {
+        error.innerHTML = "Age is required";
+      } else if (isNaN(age)) {
+        error.innerHTML = "Age must be a number";
+      } else if (age < 18 || age > 60) {
+        error.innerHTML = "Age must be between 18 and 60";
+      } else {
+        error.innerHTML = "";
+      }
+    }
+
+    // Final validation when form is submitted
+    function validateForm() {
+      validateName();
+      validateEmail();
+      validateAge();
+
+      let nameError = document.getElementById("nameError").innerHTML;
+      let emailError = document.getElementById("emailError").innerHTML;
+      let ageError = document.getElementById("ageError").innerHTML;
+
+      if (nameError || emailError || ageError) {
+        alert("Please correct the errors before submitting!");
+        return false;
+      }
+
+      alert("Form submitted successfully!");
+      return true;
+    }
+  </script>
+</head>
+<body>
+
+  <h2>Gym Admission Form</h2>
+
+  <form name="gymForm" onsubmit="return validateForm()">
+    <label>Full Name:</label><br>
+    <input type="text" name="name" oninput="validateName()"><br>
+    <span id="nameError" style="color:red;"></span><br><br>
+
+    <label>Email:</label><br>
+    <input type="email" name="email" oninput="validateEmail()"><br>
+    <span id="emailError" style="color:red;"></span><br><br>
+
+    <label>Age:</label><br>
+    <input type="number" name="age" oninput="validateAge()"><br>
+    <span id="ageError" style="color:red;"></span><br><br>
+
+    <input type="submit" value="Submit">
+  </form>
+
+</body>
+</html>
