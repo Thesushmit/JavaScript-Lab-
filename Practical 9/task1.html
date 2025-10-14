@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LocalStorage vs SessionStorage Demo</title>
+</head>
+<body>
+    <h2>LocalStorage & SessionStorage Demo</h2>
+    <input type="text" id="nameInput" placeholder="Enter your name">
+    <button onclick="saveData()">Save</button>
+    <button onclick="loadData()">Load</button>
+    <button onclick="saveSession()">Save Session</button>
+    <button onclick="loadSession()">Load Session</button>
+    <div id="output"></div>
+    <script>
+        function saveData() {
+            let name = document.getElementById('nameInput').value;
+            localStorage.setItem('username', name);
+            document.getElementById('output').innerText = "Saved to localStorage: " + name;
+        }
+        function loadData() {
+            let name = localStorage.getItem('username');
+            document.getElementById('output').innerText = "Loaded from localStorage: " + name;
+        }
+        function saveSession() {
+            let name = document.getElementById('nameInput').value;
+            sessionStorage.setItem('sessionUser', name);
+            document.getElementById('output').innerText = "Saved to sessionStorage: " + name;
+        }
+        function loadSession() {
+            let name = sessionStorage.getItem('sessionUser');
+            document.getElementById('output').innerText = "Loaded from sessionStorage: " + name;
+        }
+    </script>
+</body>
+</html>

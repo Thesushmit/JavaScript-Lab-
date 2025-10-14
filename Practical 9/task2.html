@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Theme Switcher</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            transition: background-color 0.5s, color 0.5s, font-size 0.5s;
+        }
+
+        .dark {
+            background-color: #121212;
+            color: white;
+        }
+
+        .light {
+            background-color: #ffffff;
+            color: black;
+        }
+
+        button, select {
+            margin: 10px;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Theme Switcher with localStorage</h1>
+    <button id="toggleTheme">Toggle Theme</button>
+    <select id="fontSizeSelect">
+        <option value="small">Small Font</option>
+        <option value="medium">Medium Font</option>
+        <option value="large">Large Font</option>
+    </select>
+<script>
+    const body = document.body;
+    const btn = document.getElementById("toggleTheme");
+    const fontSizeSelect = document.getElementById("fontSizeSelect");
+
+    // Font size map
+    const fontSizes = {
+        small: "14px",
+        medium: "18px",
+        large: "24px"
+    };
+
+    // Load theme from localStorage on page load
+    const savedTheme = localStorage.getItem("theme") || "light";
+    body.classList.add(savedTheme);
+
+    // Load font size from localStorage on page load
+    const savedFontSize = localStorage.getItem("fontSize") || "medium";
+    body.style.fontSize = fontSizes[savedFontSize];
+    fontSizeSelect.value = savedFontSize;
+
+    // Update button text
+    btn.textContent = savedTheme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode";
+
+    // Toggle theme and save to localStorage
+    btn.addEventListener("click", () => {
+        const newTheme = body.classList.contains("dark") ? "light" : "dark";
+        body.className = newTheme;
+        localStorage.setItem("theme", newTheme);
+        btn.textContent = newTheme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode";
+        // Keep font size class
+        body.style.fontSize = fontSizes[fontSizeSelect.value];
+    });
+
+    // Change font size and save to localStorage
+    fontSizeSelect.addEventListener("change", () => {
+        const selectedSize = fontSizeSelect.value;
+        body.style.fontSize = fontSizes[selectedSize];
+        localStorage.setItem("fontSize", selectedSize);
+    });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SessionStorage Form Autosave</title>
+    <style>
+        form {
+            max-width: 400px;
+            margin: 30px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        input, textarea {
+            width: 100%;
+            margin-bottom: 12px;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <form id="contactForm">
+        <h2>Contact Form</h2>
+        <input type="text" id="name" placeholder="Name" autocomplete="off">
+        <input type="email" id="email" placeholder="Email" autocomplete="off">
+        <textarea id="message" placeholder="Message"></textarea>
+        <button type="submit">Submit</button>
+    </form>
+    <script>
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const messageInput = document.getElementById('message');
+
+        // Restore values from sessionStorage on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            nameInput.value = sessionStorage.getItem('form_name') || '';
+            emailInput.value = sessionStorage.getItem('form_email') || '';
+            messageInput.value = sessionStorage.getItem('form_message') || '';
+        });
+
+        // Save to sessionStorage as user types
+        nameInput.addEventListener('input', () => {
+            sessionStorage.setItem('form_name', nameInput.value);
+        });
+        emailInput.addEventListener('input', () => {
+            sessionStorage.setItem('form_email', emailInput.value);
+        });
+        messageInput.addEventListener('input', () => {
+            sessionStorage.setItem('form_message', messageInput.value);
+        });
+
+        // Optional: Clear sessionStorage on submit
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            sessionStorage.removeItem('form_name');
+            sessionStorage.removeItem('form_email');
+            sessionStorage.removeItem('form_message');
+            this.reset();
+            alert('Form submitted!');
+        });
+    </script>
+</body>
+</html>
