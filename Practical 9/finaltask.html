@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Personal Dashboard</title>
+    <style>
+        body {
+            font-family: Verdana, sans-serif;
+            transition: all 0.4s ease;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .dark {
+            background-color: #121212;
+            color: white;
+        }
+
+        .light {
+            background-color: #ffffff;
+            color: black;
+        }
+
+        #controls button,
+        select {
+            margin: 6px;
+            padding: 8px 14px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 id="welcomeText">Welcome!</h1>
+
+    <div id="controls">
+        <input type="text" id="userName" placeholder="Enter your name">
+        <button id="saveUser">Save Name</button>
+        <button id="themeBtn">Switch Theme</button>
+        <select id="fontChooser">
+            <option value="small">Small</option>
+            <option value="medium">Medium</option>
+            <option value="large">Large</option>
+        </select>
+        <button id="resetPrefs">Reset Preferences</button> <!-- Added Reset button -->
+    </div>
+
+    <p id="tabCounter"></p>
+
+    <h3>Feedback</h3>
+    <textarea id="feedback" rows="5" cols="40" placeholder="Your feedback..."></textarea>
+
+    <script>
+        // --- THEME SETUP ---
+        let themeNow = localStorage.getItem("theme"); // Use one consistent key name 'theme'
+        if (!themeNow) {
+            themeNow = "light"; // Default should be light, not dark
+            localStorage.setItem("theme", themeNow);
+        }
+        document.body.classList.add(themeNow); // Correct way to apply class (not .classList = t)
+
+        document.getElementById("themeBtn").onclick = function () {
+            let newTheme = document.body.classList.contains("light") ? "dark" : "light";
+            document.body.classList.remove("light", "dark"); // Remove both before toggling
+            document.body.classList.add(newTheme);
+            localStorage.setItem("theme", newTheme); // Consistent key name
+        };
+
+        // --- FONT SIZE ---
+        const fSelect = document.getElementById("fontChooser");
+        fSelect.onchange = function () {
+            let f = fSelect.value;
+            let size;
+            if (f === "small") size = "12px";   // Added actual pixel sizes
+            if (f === "medium") size = "16px";
+            if (f === "large") size = "20px";
+            document.body.style.fontSize = size;
+            localStorage.setItem("fontSizePref", f); // Fixed key capitalization
+        };
+
+        let storedFont = localStorage.getItem("fontSizePref"); // Matching key name
+        if (storedFont) {
+            fSelect.value = storedFont;
+            let size;
+            if (storedFont === "small") size = "12px";
+            if (storedFont === "medium") size = "16px";
+            if (storedFont === "large") size = "20px";
+            document.body.style.fontSize = size; // Restore font on reload
+        }
+
+        // --- USERNAME ---
+        function showUsername() {
+            const savedUser = localStorage.getItem("username"); // Consistent key usage
+            if (savedUser) {
+                document.getElementById("welcomeText").innerText = "Welcome, " + savedUser;
+            }
+        }
+
+        document.getElementById("saveUser").onclick = function () {
+            let user = document.getElementById("userName").value;
+            localStorage.setItem("username", user); // Avoid localStorage.name misuse
+            showUsername();
+        };
+
+        showUsername(); // Auto-display username on load
+
+        // --- SESSION COUNTER ---
+        let count = Number(sessionStorage.getItem("visits")) || 0; // Ensure numeric conversion
+        count++; // Increment properly
+        sessionStorage.setItem("visits", count);
+        document.getElementById("tabCounter").innerHTML =
+            `This tab has been refreshed ${count} times.`; // Now increases correctly
+
+        // --- FEEDBACK ---
+        const fb = document.getElementById("feedback");
+        fb.addEventListener("keyup", () => {
+            sessionStorage.setItem("feedbackText", fb.value); // Use .value instead of innerHTML
+        });
+
+        let savedFb = sessionStorage.getItem("feedbackText");
+        if (savedFb) fb.value = savedFb; // Restore feedback on reload (same tab only)
+
+        // --- RESET PREFERENCES ---
+        document.getElementById("resetPrefs").onclick = function () {
+            localStorage.clear(); // Clear only persistent storage
+            location.reload(); // Reload page
+        };
+    </script>
+</body>
+
+</html>
