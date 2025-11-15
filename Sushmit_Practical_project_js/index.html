@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Personality Quiz - Discover Your AI Persona</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .quiz-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 800px;
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .quiz-header h1 {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar-container {
+            margin: 1.5rem 0;
+        }
+
+        .question-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .question-number {
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            color: #2d3748;
+        }
+
+        .option-btn {
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            background: white;
+            text-align: left;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary-color);
+            background: #f0f4ff;
+            transform: translateX(5px);
+        }
+
+        .option-btn.selected {
+            border-color: var(--primary-color);
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .result-card {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border-radius: 15px;
+            margin-top: 2rem;
+        }
+
+        .personality-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .personality-name {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .personality-description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 1rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-primary-custom {
+            background: var(--primary-color);
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .timer-display {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .welcome-section {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .welcome-section input {
+            max-width: 400px;
+            margin: 1rem auto;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .alert-custom {
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Timer Display -->
+    <div class="timer-display" id="timerDisplay">
+        <i class="bi bi-clock"></i> Time: <span id="timerValue">00:00</span>
+    </div>
+
+    <div class="container">
+        <div class="quiz-container">
+            <!-- Welcome Section -->
+            <div id="welcomeSection" class="welcome-section">
+                <div class="quiz-header">
+                    <h1><i class="bi bi-robot"></i> AI Personality Quiz</h1>
+                    <p class="text-muted">Discover which AI personality matches your traits!</p>
+                </div>
+                <form id="welcomeForm" class="mt-4">
+                    <div class="mb-3">
+                        <label for="userName" class="form-label">Enter Your Name</label>
+                        <input type="text" class="form-control" id="userName" name="userName" 
+                               placeholder="Your name here..." required>
+                        <div class="invalid-feedback" id="nameError"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="userEmail" class="form-label">Enter Your Email</label>
+                        <input type="email" class="form-control" id="userEmail" name="userEmail" 
+                               placeholder="your.email@example.com" required>
+                        <div class="invalid-feedback" id="emailError"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary-custom btn-lg">
+                        <i class="bi bi-play-fill"></i> Start Quiz
+                    </button>
+                </form>
+                <div id="welcomeAlert" class="alert alert-info alert-custom mt-3 hidden" role="alert"></div>
+            </div>
+
+            <!-- Quiz Section -->
+            <div id="quizSection" class="hidden">
+                <div class="quiz-header">
+                    <h2 id="quizTitle">AI Personality Quiz</h2>
+                    <p class="text-muted">Welcome, <span id="displayName"></span>!</p>
+                </div>
+                
+                <div class="progress-bar-container">
+                    <div class="progress" style="height: 10px; border-radius: 10px;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                             role="progressbar" id="progressBar" style="width: 0%"></div>
+                    </div>
+                    <small class="text-muted">Question <span id="currentQuestionNum">0</span> of <span id="totalQuestions">0</span></small>
+                </div>
+
+                <div id="questionContainer"></div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <button class="btn btn-secondary" id="prevBtn" onclick="previousQuestion()">
+                        <i class="bi bi-arrow-left"></i> Previous
+                    </button>
+                    <button class="btn btn-primary-custom" id="nextBtn" onclick="nextQuestion()">
+                        Next <i class="bi bi-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div id="resultsSection" class="hidden">
+                <div class="result-card fade-in">
+                    <div class="personality-icon" id="personalityIcon"></div>
+                    <div class="personality-name" id="personalityName"></div>
+                    <div class="personality-description" id="personalityDescription"></div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-label">Score</div>
+                            <div class="stat-value" id="statScore">0%</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Time Taken</div>
+                            <div class="stat-value" id="statTime">0:00</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Questions</div>
+                            <div class="stat-value" id="statQuestions">0</div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-light btn-lg mt-4" onclick="restartQuiz()">
+                        <i class="bi bi-arrow-clockwise"></i> Take Quiz Again
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Internal JavaScript -->
+    <script>
+        // ============================================
+        // Quiz Data (Embedded JSON-like structure)
+        // ============================================
+        const quizData = {
+            questions: [
+                {
+                    question: "When faced with a complex problem, how do you approach it?",
+                    options: [
+                        { text: "Break it down into smaller, logical steps", personality: "Analytical", points: 3 },
+                        { text: "Brainstorm creative solutions with others", personality: "Creative", points: 3 },
+                        { text: "Follow established procedures and guidelines", personality: "Systematic", points: 3 },
+                        { text: "Trust your intuition and go with the flow", personality: "Intuitive", points: 3 }
+                    ]
+                },
+                {
+                    question: "What motivates you most in your work?",
+                    options: [
+                        { text: "Solving puzzles and finding optimal solutions", personality: "Analytical", points: 2 },
+                        { text: "Creating something new and innovative", personality: "Creative", points: 2 },
+                        { text: "Maintaining order and efficiency", personality: "Systematic", points: 2 },
+                        { text: "Helping others and making a difference", personality: "Intuitive", points: 2 }
+                    ]
+                },
+                {
+                    question: "How do you prefer to learn new things?",
+                    options: [
+                        { text: "Through detailed analysis and research", personality: "Analytical", points: 2 },
+                        { text: "By experimenting and trying new approaches", personality: "Creative", points: 2 },
+                        { text: "Following structured courses and tutorials", personality: "Systematic", points: 2 },
+                        { text: "Through hands-on experience and practice", personality: "Intuitive", points: 2 }
+                    ]
+                },
+                {
+                    question: "What's your ideal work environment?",
+                    options: [
+                        { text: "Quiet space with data and research tools", personality: "Analytical", points: 1 },
+                        { text: "Dynamic space with creative tools and inspiration", personality: "Creative", points: 1 },
+                        { text: "Organized space with clear systems and processes", personality: "Systematic", points: 1 },
+                        { text: "Flexible space that adapts to your needs", personality: "Intuitive", points: 1 }
+                    ]
+                },
+                {
+                    question: "How do you handle deadlines?",
+                    options: [
+                        { text: "Plan meticulously and work systematically", personality: "Analytical", points: 2 },
+                        { text: "Work in bursts of inspiration", personality: "Creative", points: 2 },
+                        { text: "Follow a strict schedule and checklist", personality: "Systematic", points: 2 },
+                        { text: "Adapt and adjust as needed", personality: "Intuitive", points: 2 }
+                    ]
+                },
+                {
+                    question: "What type of tasks energize you?",
+                    options: [
+                        { text: "Data analysis and pattern recognition", personality: "Analytical", points: 3 },
+                        { text: "Design and creative problem-solving", personality: "Creative", points: 3 },
+                        { text: "Organizing and optimizing processes", personality: "Systematic", points: 3 },
+                        { text: "Collaborating and building relationships", personality: "Intuitive", points: 3 }
+                    ]
+                },
+                {
+                    question: "How do you make decisions?",
+                    options: [
+                        { text: "Based on data and logical analysis", personality: "Analytical", points: 2 },
+                        { text: "Based on creative vision and possibilities", personality: "Creative", points: 2 },
+                        { text: "Based on proven methods and best practices", personality: "Systematic", points: 2 },
+                        { text: "Based on feelings and personal values", personality: "Intuitive", points: 2 }
+                    ]
+                },
+                {
+                    question: "What's your approach to teamwork?",
+                    options: [
+                        { text: "Provide analytical insights and data", personality: "Analytical", points: 1 },
+                        { text: "Bring creative ideas and innovation", personality: "Creative", points: 1 },
+                        { text: "Ensure structure and organization", personality: "Systematic", points: 1 },
+                        { text: "Foster communication and harmony", personality: "Intuitive", points: 1 }
+                    ]
+                },
+                {
+                    question: "How do you deal with uncertainty?",
+                    options: [
+                        { text: "Gather more information to reduce uncertainty", personality: "Analytical", points: 2 },
+                        { text: "See it as an opportunity for innovation", personality: "Creative", points: 2 },
+                        { text: "Create a plan to manage the uncertainty", personality: "Systematic", points: 2 },
+                        { text: "Trust your instincts and adapt", personality: "Intuitive", points: 2 }
+                    ]
+                },
+                {
+                    question: "What do you value most in a project?",
+                    options: [
+                        { text: "Accuracy and precision", personality: "Analytical", points: 3 },
+                        { text: "Innovation and originality", personality: "Creative", points: 3 },
+                        { text: "Reliability and consistency", personality: "Systematic", points: 3 },
+                        { text: "Meaning and impact", personality: "Intuitive", points: 3 }
+                    ]
+                }
+            ],
+            personalities: [
+                {
+                    type: "Analytical",
+                    icon: "bi bi-calculator",
+                    description: "You are an Analytical AI! You excel at breaking down complex problems, analyzing data, and finding logical solutions. Your methodical approach and attention to detail make you excellent at research, data analysis, and strategic planning. You thrive in environments where precision and accuracy are valued.",
+                    traits: ["Logical", "Detail-oriented", "Data-driven", "Systematic", "Precise"]
+                },
+                {
+                    type: "Creative",
+                    icon: "bi bi-palette",
+                    description: "You are a Creative AI! You bring innovation, imagination, and artistic flair to everything you do. Your ability to think outside the box and generate original ideas makes you perfect for design, content creation, and innovative problem-solving. You inspire others with your unique perspective.",
+                    traits: ["Innovative", "Imaginative", "Artistic", "Original", "Inspiring"]
+                },
+                {
+                    type: "Systematic",
+                    icon: "bi bi-diagram-3",
+                    description: "You are a Systematic AI! You excel at organizing, planning, and maintaining order. Your structured approach and reliability make you excellent at project management, process optimization, and ensuring consistency. You create stability and efficiency wherever you go.",
+                    traits: ["Organized", "Reliable", "Structured", "Efficient", "Consistent"]
+                },
+                {
+                    type: "Intuitive",
+                    icon: "bi bi-heart",
+                    description: "You are an Intuitive AI! You understand people, emotions, and relationships. Your empathetic nature and ability to read situations make you excellent at collaboration, communication, and creating meaningful connections. You bring warmth and understanding to every interaction.",
+                    traits: ["Empathetic", "Adaptive", "People-oriented", "Understanding", "Harmonious"]
+                }
+            ]
+        };
+
+        // ============================================
+        // 1. JavaScript Setup and Developer Tools
+        // ============================================
+        
+        // Console methods demonstration
+        console.log('%c=== AI Personality Quiz Initialized ===', 'color: #6366f1; font-size: 16px; font-weight: bold;');
+        console.log('Welcome to the AI Personality Quiz!');
+        
+        // Log user environment info
+        const userInfo = {
+            userAgent: navigator.userAgent,
+            platform: navigator.platform,
+            language: navigator.language,
+            screenWidth: window.screen.width,
+            screenHeight: window.screen.height,
+            timestamp: new Date().toISOString()
+        };
+        console.table(userInfo);
+        
+        // Log quiz data structure
+        console.log('Quiz Questions Loaded:', quizData);
+        
+        // Error logging example
+        try {
+            console.trace('Quiz initialization trace');
+        } catch (error) {
+            console.error('Error during initialization:', error);
+        }
+
+        // ============================================
+        // 2. Variables, Data Types & ES6+ Features
+        // ============================================
+        
+        // Variable declarations: var, let, const
+        var globalCounter = 0; // var - function scoped
+        let currentQuestionIndex = 0; // let - block scoped
+        const MAX_QUESTIONS = quizData.questions.length; // const - immutable
+        
+        // ES6+ Features
+        // Template literals
+        const welcomeMessage = (name) => `Welcome, ${name}! Let's discover your AI personality.`;
+        
+        // Destructuring
+        const { questions, personalities } = quizData;
+        const [firstQuestion] = questions;
+        
+        // Default parameters
+        const calculateScore = (answers = [], totalQuestions = MAX_QUESTIONS) => {
+            return Math.round((answers.length / totalQuestions) * 100);
+        };
+        
+        // Spread operator
+        const allPersonalityTypes = [...new Set(personalities.map(p => p.type))];
+        console.log('Available personality types:', allPersonalityTypes);
+
+        // ============================================
+        // 3. Conditionals, Loops & User Input
+        // ============================================
+        
+        let userAnswers = [];
+        let quizStartTime = null;
+        let timerInterval = null;
+        let elapsedSeconds = 0;
+        
+        // Initialize quiz
+        function initializeQuiz() {
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            elapsedSeconds = 0;
+            displayQuestion();
+            startTimer();
+        }
+        
+        // Display current question
+        function displayQuestion() {
+            const question = questions[currentQuestionIndex];
+            const container = document.getElementById('questionContainer');
+            
+            // Conditional rendering based on question type
+            let questionHTML = '';
+            
+            if (question) {
+                questionHTML = `
+                    <div class="question-card fade-in">
+                        <div class="question-number">Question ${currentQuestionIndex + 1}</div>
+                        <div class="question-text">${question.question}</div>
+                        <div class="options-container">
+                `;
+                
+                // Loop through options
+                question.options.forEach((option, index) => {
+                    const isSelected = userAnswers[currentQuestionIndex] === index;
+                    questionHTML += `
+                        <button class="option-btn ${isSelected ? 'selected' : ''}" 
+                                onclick="selectOption(${index})" 
+                                data-option="${index}">
+                            <i class="bi ${isSelected ? 'bi-check-circle-fill' : 'bi-circle'}"></i>
+                            ${option.text}
+                        </button>
+                    `;
+                });
+                
+                questionHTML += '</div></div>';
+            }
+            
+            container.innerHTML = questionHTML;
+            
+            // Update progress
+            const progress = ((currentQuestionIndex + 1) / MAX_QUESTIONS) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            document.getElementById('currentQuestionNum').textContent = currentQuestionIndex + 1;
+            document.getElementById('totalQuestions').textContent = MAX_QUESTIONS;
+            
+            // Button state management with conditionals
+            document.getElementById('prevBtn').disabled = currentQuestionIndex === 0;
+            document.getElementById('nextBtn').innerHTML = 
+                currentQuestionIndex === MAX_QUESTIONS - 1 ? 
+                '<i class="bi bi-check-circle"></i> Submit Quiz' : 
+                'Next <i class="bi bi-arrow-right"></i>';
+        }
+        
+        // Select option
+        function selectOption(optionIndex) {
+            userAnswers[currentQuestionIndex] = optionIndex;
+            displayQuestion(); // Refresh to show selection
+            
+            // Switch case for different option types
+            switch(optionIndex) {
+                case 0:
+                    console.log('Option A selected');
+                    break;
+                case 1:
+                    console.log('Option B selected');
+                    break;
+                case 2:
+                    console.log('Option C selected');
+                    break;
+                case 3:
+                    console.log('Option D selected');
+                    break;
+                default:
+                    console.log('Invalid option');
+            }
+        }
+        
+        // Navigate questions
+        function nextQuestion() {
+            // Validation: ensure answer is selected
+            if (userAnswers[currentQuestionIndex] === undefined) {
+                alert('Please select an option before proceeding!');
+                return;
+            }
+            
+            if (currentQuestionIndex < MAX_QUESTIONS - 1) {
+                currentQuestionIndex++;
+                displayQuestion();
+            } else {
+                submitQuiz();
+            }
+        }
+        
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion();
+            }
+        }
+
+        // ============================================
+        // 4. Functions, Scope & Error Handling
+        // ============================================
+        
+        // Function declarations
+        function calculatePersonality() {
+            try {
+                // Count scores for each personality type
+                const scores = {};
+                
+                questions.forEach((question, qIndex) => {
+                    const selectedOption = userAnswers[qIndex];
+                    if (selectedOption !== undefined) {
+                        const option = question.options[selectedOption];
+                        const personalityType = option.personality;
+                        
+                        // Scope demonstration: block-scoped variable
+                        {
+                            let points = option.points || 1;
+                            scores[personalityType] = (scores[personalityType] || 0) + points;
+                        }
+                    }
+                });
+                
+                // Find dominant personality
+                let maxScore = 0;
+                let dominantPersonality = 'Analytical';
+                
+                for (const [type, score] of Object.entries(scores)) {
+                    if (score > maxScore) {
+                        maxScore = score;
+                        dominantPersonality = type;
+                    }
+                }
+                
+                return dominantPersonality;
+            } catch (error) {
+                console.error('Error calculating personality:', error);
+                return 'Analytical'; // Default fallback
+            }
+        }
+        
+        // Function expressions
+        const formatTime = function(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        };
+        
+        // Arrow functions
+        const reverseNumber = (num) => {
+            try {
+                const reversed = parseInt(num.toString().split('').reverse().join(''));
+                return reversed;
+            } catch (error) {
+                console.error('Error reversing number:', error);
+                return num;
+            }
+        };
+        
+        // Palindrome checker (demonstrating function scope)
+        const checkPalindrome = (str) => {
+            const cleaned = str.toLowerCase().replace(/[^a-z0-9]/g, '');
+            const reversed = cleaned.split('').reverse().join('');
+            return cleaned === reversed;
+        };
+        
+        // Closure example
+        const createCounter = () => {
+            let count = 0;
+            return () => {
+                count++;
+                return count;
+            };
+        };
+        const questionCounter = createCounter();
+
+        // ============================================
+        // 5. Arrays & Objects with Higher-Order Functions
+        // ============================================
+        
+        // Array methods demonstration
+        function analyzeAnswers() {
+            // Map: Transform answers to scores
+            const answerScores = userAnswers.map((answerIndex, qIndex) => {
+                if (answerIndex !== undefined) {
+                    return questions[qIndex].options[answerIndex].points || 1;
+                }
+                return 0;
+            });
+            
+            // Filter: Get only answered questions
+            const answeredQuestions = userAnswers.filter(answer => answer !== undefined);
+            
+            // Reduce: Calculate total score
+            const totalScore = answerScores.reduce((accumulator, current) => {
+                return accumulator + current;
+            }, 0);
+            
+            // ForEach: Log each answer
+            userAnswers.forEach((answer, index) => {
+                if (answer !== undefined) {
+                    console.log(`Question ${index + 1}: Option ${answer + 1}`);
+                }
+            });
+            
+            return {
+                totalScore,
+                answeredCount: answeredQuestions.length,
+                averageScore: totalScore / answeredQuestions.length
+            };
+        }
+        
+        // Object array handling
+        const personalityStats = personalities.map(personality => ({
+            type: personality.type,
+            description: personality.description,
+            icon: personality.icon,
+            traits: personality.traits || []
+        }));
+        
+        console.log('Personality Statistics:', personalityStats);
+
+        // ============================================
+        // 6. String Methods & Regular Expressions
+        // ============================================
+        
+        // Email validation with regex
+        const validateEmail = (email) => {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        };
+        
+        // Extract information from text
+        const extractInfo = (text) => {
+            // Count vowels
+            const vowels = text.match(/[aeiouAEIOU]/g);
+            const vowelCount = vowels ? vowels.length : 0;
+            
+            // Extract words
+            const words = text.split(/\s+/);
+            
+            // Reverse paragraph
+            const reversed = text.split('').reverse().join('');
+            
+            return {
+                vowelCount,
+                wordCount: words.length,
+                reversed
+            };
+        };
+        
+        // String methods demonstration
+        const processUserName = (name) => {
+            if (!name) return '';
+            
+            // Trim, capitalize
+            const trimmed = name.trim();
+            const capitalized = trimmed.charAt(0).toUpperCase() + trimmed.slice(1).toLowerCase();
+            
+            // Replace spaces
+            const processed = capitalized.replace(/\s+/g, ' ');
+            
+            return processed;
+        };
+
+        // ============================================
+        // 7. DOM Traversal and Manipulation
+        // ============================================
+        
+        // DOM manipulation functions
+        function showSection(sectionId) {
+            const sections = ['welcomeSection', 'quizSection', 'resultsSection'];
+            sections.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.classList.add('hidden');
+                }
+            });
+            
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+            }
+        }
+        
+        function updateDisplayName(name) {
+            const nameElement = document.getElementById('displayName');
+            if (nameElement) {
+                nameElement.textContent = processUserName(name);
+            }
+        }
+        
+        // Create dynamic elements
+        function createAlert(message, type = 'info') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-custom`;
+            alertDiv.setAttribute('role', 'alert');
+            alertDiv.innerHTML = `<i class="bi bi-info-circle"></i> ${message}`;
+            return alertDiv;
+        }
+
+        // ============================================
+        // 8. Form Handling & Validation
+        // ============================================
+        
+        // Form validation
+        const welcomeForm = document.getElementById('welcomeForm');
+        const userNameInput = document.getElementById('userName');
+        const userEmailInput = document.getElementById('userEmail');
+        
+        // Real-time validation
+        userNameInput.addEventListener('blur', function() {
+            const name = this.value.trim();
+            const errorDiv = document.getElementById('nameError');
+            
+            if (name.length < 2) {
+                this.classList.add('is-invalid');
+                errorDiv.textContent = 'Name must be at least 2 characters long';
+            } else if (!/^[a-zA-Z\s]+$/.test(name)) {
+                this.classList.add('is-invalid');
+                errorDiv.textContent = 'Name can only contain letters and spaces';
+            } else {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+                errorDiv.textContent = '';
+            }
+        });
+        
+        userEmailInput.addEventListener('blur', function() {
+            const email = this.value.trim();
+            const errorDiv = document.getElementById('emailError');
+            
+            if (!validateEmail(email)) {
+                this.classList.add('is-invalid');
+                errorDiv.textContent = 'Please enter a valid email address';
+            } else {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+                errorDiv.textContent = '';
+            }
+        });
+        
+        userEmailInput.addEventListener('change', function() {
+            console.log('Email changed:', this.value);
+        });
+        
+        // Form submission
+        welcomeForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = userNameInput.value.trim();
+            const email = userEmailInput.value.trim();
+            
+            // Validation
+            if (name.length < 2) {
+                alert('Please enter a valid name (at least 2 characters)');
+                userNameInput.focus();
+                return;
+            }
+            
+            if (!validateEmail(email)) {
+                alert('Please enter a valid email address');
+                userEmailInput.focus();
+                return;
+            }
+            
+            // Store user info
+            const userInfo = {
+                name: processUserName(name),
+                email: email,
+                startTime: new Date().toISOString()
+            };
+            
+            // Web Storage (localStorage)
+            localStorage.setItem('quizUserInfo', JSON.stringify(userInfo));
+            sessionStorage.setItem('quizStarted', 'true');
+            
+            // Update display
+            updateDisplayName(name);
+            showSection('quizSection');
+            initializeQuiz();
+            
+            // Show welcome message
+            const alertDiv = createAlert(`Welcome ${userInfo.name}! Let's begin your personality journey.`, 'success');
+            const welcomeAlert = document.getElementById('welcomeAlert');
+            welcomeAlert.className = 'alert alert-success alert-custom mt-3';
+            welcomeAlert.innerHTML = alertDiv.innerHTML;
+        });
+
+        // ============================================
+        // 9. Web Storage and State Management
+        // ============================================
+        
+        // Load saved preferences
+        function loadUserPreferences() {
+            const savedInfo = localStorage.getItem('quizUserInfo');
+            if (savedInfo) {
+                try {
+                    const userInfo = JSON.parse(savedInfo);
+                    console.log('Loaded user preferences:', userInfo);
+                    
+                    // Auto-fill form if returning user
+                    if (userNameInput && userInfo.name) {
+                        userNameInput.value = userInfo.name;
+                    }
+                } catch (error) {
+                    console.error('Error parsing saved preferences:', error);
+                }
+            }
+            
+            // Check session storage
+            const quizStarted = sessionStorage.getItem('quizStarted');
+            if (quizStarted === 'true') {
+                console.log('Quiz session is active');
+            }
+        }
+        
+        // Save quiz results
+        function saveQuizResults(result) {
+            const results = {
+                ...result,
+                timestamp: new Date().toISOString(),
+                userAgent: navigator.userAgent
+            };
+            
+            // Get existing results
+            let allResults = [];
+            const savedResults = localStorage.getItem('quizResults');
+            if (savedResults) {
+                try {
+                    allResults = JSON.parse(savedResults);
+                } catch (error) {
+                    console.error('Error parsing saved results:', error);
+                }
+            }
+            
+            // Add new result
+            allResults.push(results);
+            
+            // Keep only last 10 results
+            if (allResults.length > 10) {
+                allResults = allResults.slice(-10);
+            }
+            
+            // Save back to localStorage
+            localStorage.setItem('quizResults', JSON.stringify(allResults));
+            console.log('Quiz results saved to localStorage');
+        }
+        
+        // Load preferences on page load
+        loadUserPreferences();
+
+        // ============================================
+        // 10. JSON Handling and Mini API Mock
+        // ============================================
+        
+        // Simulate API call with setTimeout
+        function loadQuizData() {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    console.log('Quiz data loaded (simulated API call)');
+                    resolve(quizData);
+                }, 100);
+            });
+        }
+        
+        // Parse and display JSON data
+        async function initializeQuizData() {
+            try {
+                const data = await loadQuizData();
+                console.log('Quiz data initialized:', data);
+                
+                // Display personalities in console as table
+                console.table(data.personalities.map(p => ({
+                    Type: p.type,
+                    Icon: p.icon,
+                    Traits: p.traits.join(', ')
+                })));
+            } catch (error) {
+                console.error('Error loading quiz data:', error);
+            }
+        }
+        
+        // Initialize on page load
+        initializeQuizData();
+
+        // ============================================
+        // 11. Timers and Dynamic UI
+        // ============================================
+        
+        // Timer functions
+        function startTimer() {
+            quizStartTime = Date.now();
+            elapsedSeconds = 0;
+            
+            timerInterval = setInterval(() => {
+                elapsedSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+        
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+        
+        function updateTimerDisplay() {
+            const timerValue = document.getElementById('timerValue');
+            if (timerValue) {
+                timerValue.textContent = formatTime(elapsedSeconds);
+            }
+        }
+        
+        // Alert on quiz start (setTimeout)
+        function showStartAlert() {
+            setTimeout(() => {
+                const alert = createAlert('Quiz started! Answer all questions to discover your AI personality.', 'info');
+                document.body.appendChild(alert);
+                
+                // Remove alert after 3 seconds
+                setTimeout(() => {
+                    if (alert.parentNode) {
+                        alert.parentNode.removeChild(alert);
+                    }
+                }, 3000);
+            }, 500);
+        }
+
+        // ============================================
+        // Quiz Submission and Results
+        // ============================================
+        
+        function submitQuiz() {
+            stopTimer();
+            
+            // Calculate results
+            const personalityType = calculatePersonality();
+            const analysis = analyzeAnswers();
+            const personality = personalities.find(p => p.type === personalityType);
+            
+            // Display results
+            if (personality) {
+                document.getElementById('personalityIcon').innerHTML = `<i class="${personality.icon}"></i>`;
+                document.getElementById('personalityName').textContent = personality.type;
+                document.getElementById('personalityDescription').textContent = personality.description;
+                
+                // Update stats
+                document.getElementById('statScore').textContent = `${analysis.averageScore.toFixed(0)}%`;
+                document.getElementById('statTime').textContent = formatTime(elapsedSeconds);
+                document.getElementById('statQuestions').textContent = `${analysis.answeredCount}/${MAX_QUESTIONS}`;
+            }
+            
+            // Save results
+            const result = {
+                personalityType,
+                score: analysis.averageScore,
+                timeTaken: elapsedSeconds,
+                answers: userAnswers,
+                timestamp: new Date().toISOString()
+            };
+            
+            saveQuizResults(result);
+            
+            // Show results section
+            showSection('resultsSection');
+        }
+        
+        function restartQuiz() {
+            // Clear storage
+            sessionStorage.removeItem('quizStarted');
+            
+            // Reset state
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            elapsedSeconds = 0;
+            
+            // Show welcome section
+            showSection('welcomeSection');
+            
+            // Reset form
+            welcomeForm.reset();
+            userNameInput.classList.remove('is-valid', 'is-invalid');
+            userEmailInput.classList.remove('is-valid', 'is-invalid');
+        }
+
+        // ============================================
+        // Inline JavaScript (Demonstrating inline JS)
+        // ============================================
+        
+        // This is inline JavaScript - executed immediately
+        (function() {
+            console.log('Inline script executed on page load');
+            
+            // Check if user has completed quiz before
+            const savedResults = localStorage.getItem('quizResults');
+            if (savedResults) {
+                try {
+                    const results = JSON.parse(savedResults);
+                    console.log(`You have ${results.length} previous quiz result(s) saved.`);
+                } catch (error) {
+                    console.error('Error reading saved results:', error);
+                }
+            }
+        })();
+    </script>
+
+    <!-- Inline JavaScript in HTML attribute (demonstrating inline JS) -->
+    <script>
+        // Additional inline script for page load
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM Content Loaded - Quiz ready!');
+            console.log('Environment check complete');
+        });
+    </script>
+</body>
+</html>
+
